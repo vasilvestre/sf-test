@@ -1,0 +1,62 @@
+category_name: "Symfony Basics"
+category_description: "Basic concepts and components of Symfony 7.0"
+questions:
+  - text: "What is the main configuration format used in Symfony 7.0?"
+    difficulty: 1
+    answers:
+      - text: "YAML"
+        correct: true
+      - text: "XML"
+        correct: false
+      - text: "JSON"
+        correct: false
+      - text: "INI"
+        correct: false
+
+  - text: "Which component is responsible for routing in Symfony?"
+    difficulty: 1
+    answers:
+      - text: "Routing Component"
+        correct: true
+      - text: "HttpFoundation Component"
+        correct: false
+      - text: "Framework Bundle"
+        correct: false
+      - text: "Controller Component"
+        correct: false
+
+  - text: "What is the default directory for controller classes in Symfony 7.0?"
+    difficulty: 1
+    answers:
+      - text: "src/Controller/"
+        correct: true
+      - text: "app/Controller/"
+        correct: false
+      - text: "src/Controllers/"
+        correct: false
+      - text: "controllers/"
+        correct: false
+
+  - text: "Which of the following is NOT a valid Symfony environment?"
+    difficulty: 2
+    answers:
+      - text: "production"
+        correct: false
+      - text: "development"
+        correct: false
+      - text: "test"
+        correct: false
+      - text: "staging"
+        correct: true
+
+  - text: "What command is used to clear the cache in Symfony?"
+    difficulty: 1
+    answers:
+      - text: "php bin/console cache:clear"
+        correct: true
+      - text: "php bin/console clear:cache"
+        correct: false
+      - text: "php bin/console cache:flush"
+        correct: false
+      - text: "php bin/console cache:remove"
+        correct: false

@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if singleCategory %}
+        {{ category.name }} Quiz
+    {% else %}
+        All Categories Quiz
+    {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .answer-option {
+            margin-bottom: 10px;
+        }
+        .category-label {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+        .btn-submit {
+            background-color: #2ecc71;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="quiz-container">
+        <a href="{{ path('quiz_index') }}" class="back-link">← Back to Categories</a>
+
+        <div class="header">
+            <h1>
+                {% if singleCategory %}
+                    {{ category.name }} Quiz
+                {% else %}
+                    Symfony 7.0 Quiz - All Categories
+                {% endif %}
+            </h1>
+            <p>Answer the following questions to test your knowledge</p>
+        </div>
+
+        {% if questions|length > 0 %}
+            <form action="{{ path('quiz_submit') }}" method="post">
+                {% for question in questions %}
+                    <div class="question-card">
+                        {% if not singleCategory %}
+                            <div class="category-label">{{ question.category.name }}</div>
+                        {% endif %}
+                        <div class="question-text">{{ question.text }}</div>
+
+                        {% for answer in question.answers %}
+                            <div class="answer-option">
+                                <input type="radio" id="answer-{{ question.id }}-{{ answer.id }}"
+                                       name="answers[{{ question.id }}]" value="{{ answer.id }}" required>
+                                <label for="answer-{{ question.id }}-{{ answer.id }}">{{ answer.text }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="btn-submit">Submit Answers</button>
+            </form>
+        {% else %}
+            <p>No questions available for this quiz.</p>
+        {% endif %}
+    </div>
+{% endblock %}
