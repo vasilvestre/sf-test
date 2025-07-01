@@ -55,12 +55,35 @@ class QuizLoader
         }
 
         if (!isset($quizData['category_name'])) {
-            throw new \InvalidArgumentException("Quiz file must contain a 'category_name' key");
+            $quizData['category_name'] = $quizData['category'];
         }
 
-        if (!isset($quizData['questions']) || !is_array($quizData['questions'])) {
+        // Handle both 'questions' and direct question array
+        if (isset($quizData['questions']) && is_array($quizData['questions'])) {
+            $questions = $quizData['questions'];
+        } else {
             throw new \InvalidArgumentException("Quiz file must contain a 'questions' array");
         }
+
+        // Normalize question format
+        foreach ($questions as $key => $questionData) {
+            // Handle 'question' vs 'text'
+            if (isset($questionData['question']) && !isset($questionData['text'])) {
+                $questions[$key]['text'] = $questionData['question'];
+            }
+
+            // Handle answers format
+            if (isset($questionData['answers']) && is_array($questionData['answers'])) {
+                foreach ($questionData['answers'] as $answerKey => $answerData) {
+                    // Handle 'value' vs 'text'
+                    if (isset($answerData['value']) && !isset($answerData['text'])) {
+                        $questions[$key]['answers'][$answerKey]['text'] = $answerData['value'];
+                    }
+                }
+            }
+        }
+
+        $quizData['questions'] = $questions;
 
         // Find or create the category
         $category = $this->entityManager->getRepository(Category::class)
@@ -79,14 +102,14 @@ class QuizLoader
 
         // Process questions
         foreach ($quizData['questions'] as $questionData) {
-            if (!isset($questionData['text']) || !isset($questionData['answers']) || !is_array($questionData['answers'])) {
+            if (!isset($questionData['text']) || !isset($questionData['question']) || !isset($questionData['answers']) || !is_array($questionData['answers'])) {
                 continue;
             }
 
             // Check if question already exists
             $existingQuestion = $this->entityManager->getRepository(Question::class)
                 ->findOneBy([
-                    'text' => $questionData['text'],
+                    'text' => $questionData['text'] ?? $questionData['question'],
                     'category' => $category
                 ]);
 

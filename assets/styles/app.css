@@ -1,3 +1,6 @@
+/* Base styles */
 body {
     background-color: skyblue;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
 }

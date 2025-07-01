@@ -4,52 +4,10 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <style>
-        .result-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-        }
-        .result-card {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 30px;
-            margin-bottom: 20px;
-            background-color: #f9f9f9;
-        }
-        .score {
-            font-size: 3rem;
-            font-weight: bold;
-            margin: 20px 0;
-            color: #3498db;
-        }
-        .score-details {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-        }
-        .btn-primary {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 4px;
-            text-decoration: none;
-            display: inline-block;
-            margin-right: 10px;
-        }
-        .btn-success {
-            background-color: #2ecc71;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 4px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .feedback {
-            margin: 20px 0;
-            font-size: 1.2rem;
-        }
-    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
 {% endblock %}
 
 {% block body %}
@@ -75,9 +33,74 @@
                 {% endif %}
             </div>
 
-            <div>
-                <a href="{{ path('quiz_index') }}" class="btn-primary">Try Another Quiz</a>
-                <a href="https://symfony.com/doc/current/index.html" target="_blank" class="btn-success">Learn More</a>
+            <div class="success-rates" style="margin: 20px 0; padding: 15px; background-color: #f0f8ff; border-radius: 5px; text-align: left;">
+                <h3 style="margin-bottom: 10px;">Success Rates</h3>
+
+                <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                    {% if categoryStats %}
+                        <div style="flex: 1; min-width: 200px;">
+                            <h4>{{ categoryStats.name }} Category</h4>
+                            <p><strong>Quizzes Taken:</strong> {{ categoryStats.totalQuizzes }}</p>
+                            <p><strong>Average Success Rate:</strong> {{ categoryStats.successRate|number_format }}%</p>
+                            <p><strong>Your Score:</strong> {{ score|number_format }}%</p>
+                            <p><strong>Comparison:</strong>
+                                {% if score > categoryStats.successRate %}
+                                    <span style="color: green;">{{ (score - categoryStats.successRate)|number_format }}% above average</span>
+                                {% elseif score < categoryStats.successRate %}
+                                    <span style="color: #e74c3c;">{{ (categoryStats.successRate - score)|number_format }}% below average</span>
+                                {% else %}
+                                    <span>Equal to average</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    {% endif %}
+
+                    <div style="flex: 1; min-width: 200px;">
+                        <h4>Overall</h4>
+                        <p><strong>Average Success Rate:</strong> {{ overallSuccessRate|number_format }}%</p>
+                        <p><strong>Your Score:</strong> {{ score|number_format }}%</p>
+                        <p><strong>Comparison:</strong>
+                            {% if score > overallSuccessRate %}
+                                <span style="color: green;">{{ (score - overallSuccessRate)|number_format }}% above average</span>
+                            {% elseif score < overallSuccessRate %}
+                                <span style="color: #e74c3c;">{{ (overallSuccessRate - score)|number_format }}% below average</span>
+                            {% else %}
+                                <span>Equal to average</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {% if chart is defined %}
+                <div data-controller="chart-toggle">
+                    <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 10px;">
+                        <div>
+                            <label for="category-filter">Filter by Category: </label>
+                            <select id="category-filter" data-chart-toggle-target="categorySelect">
+                                <option value="all">All Categories</option>
+                                {% if categoryStats %}
+                                    <option value="{{ quizResult.category.id }}" selected>{{ categoryStats.name }}</option>
+                                {% endif %}
+                                {% for category in categories|default([]) %}
+                                    {% if not categoryStats or category.id != quizResult.category.id %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="chart-container" data-chart-toggle-target="chart">
+                        <h3>Your Performance Trend</h3>
+                        {{ render_chart(chart, {'id': 'performance-chart'}) }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div style="margin-top: 20px;">
+                <a href="{{ path('quiz_index') }}" class="btn-primary">Back to Home</a>
+                <a href="{{ path('quiz_all') }}" class="btn-success">Try Another Quiz</a>
             </div>
         </div>
     </div>

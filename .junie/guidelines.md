@@ -72,7 +72,7 @@ php -S localhost:8000 -t public/
   ```
 
 ### Dependency Injection Configuration
-- Use the #[Autowire] attribute for dependency injection
+- Only use the #[Autowire] attribute when the type hint alone isn't sufficient for Symfony to determine which service to inject
 - Example:
   ```php
   use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -80,7 +80,13 @@ php -S localhost:8000 -t public/
   class MyService
   {
       public function __construct(
-          #[Autowire(service: OtherService::class)] private OtherService $otherService,
+          // Type hint is sufficient for unique services
+          private OtherService $otherService,
+
+          // Use #[Autowire] when type isn't enough
+          #[Autowire(service: 'specific.service.id')] private SomeInterface $specificService,
+
+          // Use #[Autowire] for parameters and values
           #[Autowire(param: 'kernel.project_dir')] string $projectDir
       ) {
           // ...
@@ -88,7 +94,7 @@ php -S localhost:8000 -t public/
   }
   ```
 - The #[Autowire] attribute must specify one of these parameters:
-  - `service`: The service to inject
+  - `service`: The service to inject (use when multiple services implement the same interface)
   - `param`: The parameter to inject
   - `value`: A literal value to inject
   - `expression`: An expression to evaluate and inject
@@ -152,6 +158,7 @@ Place quiz configuration files in the `config/quizzes/` directory with `.yaml` o
 - Use Attributes for configuration instead of YAML/PHP files
 - Use dependency injection for services
 - Use type hints for method parameters and return types
+- Use Symfony UX if a plugin is available instead of including JavaScript libraries directly
 
 ### Quiz Loading
 The `QuizLoader` service loads quizzes from configuration files in the `config/quizzes/` directory. It supports both YAML and PHP formats. Quizzes are loaded on first access to the application.
@@ -161,3 +168,58 @@ To add a new quiz:
 1. Create a new file in `config/quizzes/` with `.yaml` or `.php` extension
 2. Define the quiz structure as shown in the examples above
 3. Access the application to trigger the quiz loading process
+
+### More documentation
+
+Use files in .junie and use markdown files that document features and guidelines.
+
+### Symfony UX
+
+Symfony UX is a collection of JavaScript tools that integrate with Symfony. Instead of including JavaScript libraries directly, use the corresponding Symfony UX package when available.
+
+#### Available Symfony UX Packages
+
+- **Symfony UX Chart.js**: For creating charts using Chart.js
+  ```bash
+  composer require symfony/ux-chartjs
+  ```
+  Usage in controllers:
+  ```php
+  use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+  use Symfony\UX\Chartjs\Model\Chart;
+
+  class MyController extends AbstractController
+  {
+      public function __construct(private ChartBuilderInterface $chartBuilder) {}
+
+      public function index(): Response
+      {
+          $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
+          $chart->setData([
+              'labels' => ['January', 'February', 'March'],
+              'datasets' => [
+                  [
+                      'label' => 'My Dataset',
+                      'data' => [10, 20, 30],
+                  ],
+              ],
+          ]);
+
+          return $this->render('my_template.html.twig', [
+              'chart' => $chart,
+          ]);
+      }
+  }
+  ```
+  Usage in templates:
+  ```twig
+  {{ render_chart(chart) }}
+  ```
+
+- **Symfony UX Turbo**: For creating reactive applications without writing JavaScript
+- **Symfony UX Dropzone**: For file uploads with drag and drop
+- **Symfony UX Notify**: For browser notifications
+- **Symfony UX Swup**: For page transitions
+- **Symfony UX Typed**: For animated typing effects
+
+For a complete list of available packages, visit the [Symfony UX website](https://ux.symfony.com/).

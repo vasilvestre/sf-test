@@ -6,6 +6,8 @@ This document provides guidelines for the Symfony 7.0 Quiz System, a tool design
 ## Features
 - Display quizzes from configuration files (YAML or PHP)
 - Run tests for a single category or all categories at once
+- Display statistics on the main page (quizzes taken, success rate)
+- Show performance trend chart on the main page
 - Track failed questions for learning purposes (future feature)
 
 ## Architecture
@@ -21,18 +23,19 @@ This document provides guidelines for the Symfony 7.0 Quiz System, a tool design
    - `Category`: Represents a quiz category
    - `Question`: Represents a quiz question with multiple answers
    - `Answer`: Represents a possible answer to a question
+   - `QuizResult`: Stores quiz results including score and date
 
 2. **Configuration Files**:
    - YAML or PHP files containing quiz questions, answers, and categories
    - Located in `config/quizzes/` directory
 
 3. **Controllers**:
-   - `QuizController`: Handles quiz display, selection, and submission
+   - `QuizController`: Handles quiz display, selection, submission, and statistics
 
 4. **Templates**:
-   - Quiz selection page
+   - Main page with statistics and performance chart
    - Quiz display page
-   - Results page
+   - Results page with performance chart
 
 ## Usage
 

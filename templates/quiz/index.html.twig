@@ -4,49 +4,10 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <style>
-        .quiz-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .category-card {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background-color: #f9f9f9;
-        }
-        .category-title {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-        .category-description {
-            color: #666;
-            margin-bottom: 15px;
-        }
-        .btn-primary {
-            background-color: #3498db;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            text-decoration: none;
-            display: inline-block;
-            margin-right: 10px;
-        }
-        .btn-success {
-            background-color: #2ecc71;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
 {% endblock %}
 
 {% block body %}
@@ -56,6 +17,38 @@
             <p>Test your knowledge of Symfony 7.0 with these quizzes</p>
             <a href="{{ path('quiz_all') }}" class="btn-success">Take Quiz with All Categories</a>
         </div>
+
+        {% if totalQuizzesTaken > 0 %}
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-label">Quizzes Taken</div>
+                    <div class="stat-value">{{ totalQuizzesTaken }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Success Rate</div>
+                    <div class="stat-value">{{ averageSuccessRate|number_format }}%</div>
+                </div>
+            </div>
+
+            <div data-controller="chart-toggle">
+                <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 10px;">
+                    <div>
+                        <label for="category-filter">Filter by Category: </label>
+                        <select id="category-filter" data-chart-toggle-target="categorySelect">
+                            <option value="all">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="chart-container" data-chart-toggle-target="chart">
+                    <h3>Performance Trend</h3>
+                    {{ render_chart(chart, {'id': 'index-performance-chart'}) }}
+                </div>
+            </div>
+        {% endif %}
 
         <h2>Select a Category</h2>
 
@@ -67,6 +60,14 @@
                         <p class="category-description">{{ category.description }}</p>
                     {% endif %}
                     <p>Questions: {{ category.questions|length }}</p>
+
+                    {% if categoryStats[category.id].totalQuizzes > 0 %}
+                        <div style="margin-bottom: 15px;">
+                            <p><strong>Quizzes Taken:</strong> {{ categoryStats[category.id].totalQuizzes }}</p>
+                            <p><strong>Success Rate:</strong> {{ categoryStats[category.id].successRate|number_format }}%</p>
+                        </div>
+                    {% endif %}
+
                     <a href="{{ path('quiz_category', {'id': category.id}) }}" class="btn-primary">Start Quiz</a>
                 </div>
             {% endfor %}
