@@ -33,6 +33,33 @@
                 {% endif %}
             </div>
 
+            {% if questionsWithAnswers is defined and questionsWithAnswers|length > 0 %}
+                <div class="questions-review">
+                    <h3>Review Your Answers</h3>
+                    {% for question in questionsWithAnswers %}
+                        <div class="question-review">
+                            <div class="question-text">{{ question.text }}</div>
+                            <div class="answers-list">
+                                {% for answer in question.answers %}
+                                    <div class="answer-item {% if answer.id in question.selectedAnswers %}selected{% endif %} {% if answer.isCorrect %}correct{% endif %}">
+                                        <span class="answer-marker">
+                                            {% if answer.id in question.selectedAnswers and answer.isCorrect %}
+                                                <span class="correct-mark">✓</span>
+                                            {% elseif answer.id in question.selectedAnswers and not answer.isCorrect %}
+                                                <span class="incorrect-mark">✗</span>
+                                            {% elseif not (answer.id in question.selectedAnswers) and answer.isCorrect %}
+                                                <span class="missed-mark">•</span>
+                                            {% endif %}
+                                        </span>
+                                        <span class="answer-text">{{ answer.text }}</span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             <div class="success-rates" style="margin: 20px 0; padding: 15px; background-color: #f0f8ff; border-radius: 5px; text-align: left;">
                 <h3 style="margin-bottom: 10px;">Success Rates</h3>
 

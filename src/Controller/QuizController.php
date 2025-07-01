@@ -70,9 +70,13 @@ class QuizController extends AbstractController
     #[Route('/category/{id}', name: 'quiz_category')]
     public function category(Category $category): Response
     {
+        // Convert questions collection to array and shuffle
+        $questions = $category->getQuestions()->toArray();
+        shuffle($questions);
+
         return $this->render('quiz/quiz.html.twig', [
             'category' => $category,
-            'questions' => $category->getQuestions(),
+            'questions' => $questions,
             'singleCategory' => true,
         ]);
     }
@@ -88,6 +92,9 @@ class QuizController extends AbstractController
                 $allQuestions[] = $question;
             }
         }
+
+        // Randomize the order of questions
+        shuffle($allQuestions);
 
         return $this->render('quiz/quiz.html.twig', [
             'categories' => $categories,
@@ -192,6 +199,31 @@ class QuizController extends AbstractController
         // Get all categories for the filter dropdown
         $categories = $this->categoryRepository->findAll();
 
+        // Get questions and correct answers for display
+        $questionsWithAnswers = [];
+        foreach ($answers as $questionId => $selectedAnswerIds) {
+            $question = $this->questionRepository->find($questionId);
+            if (!$question) {
+                continue;
+            }
+
+            $questionData = [
+                'text' => $question->getText(),
+                'answers' => [],
+                'selectedAnswers' => $selectedAnswerIds
+            ];
+
+            foreach ($question->getAnswers() as $answer) {
+                $questionData['answers'][] = [
+                    'id' => $answer->getId(),
+                    'text' => $answer->getText(),
+                    'isCorrect' => $answer->isIsCorrect()
+                ];
+            }
+
+            $questionsWithAnswers[] = $questionData;
+        }
+
         return $this->render('quiz/result.html.twig', [
             'score' => $score,
             'correctAnswers' => $correctAnswers,
@@ -201,6 +233,7 @@ class QuizController extends AbstractController
             'categoryStats' => $categoryStats,
             'overallSuccessRate' => $overallSuccessRate,
             'categories' => $categories,
+            'questionsWithAnswers' => $questionsWithAnswers,
         ]);
     }
 
