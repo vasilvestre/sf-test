@@ -61,8 +61,7 @@ questions:
         answers:
             - {value: 'Configure the MAILER_DSN environment variable to "null://"', correct: true}
             - {value: 'Set `symfony.mailer.disable_delivery: true` in config/packages/test/mailer.yaml', correct: false}
-            - {value: 'Use `static::getContainer()->get(''mailer'')->stop()
-`', correct: false}
+            - {value: 'Use `static::getContainer()->get(''mailer'')->stop()`', correct: false}
             - {value: 'The test client automatically disables mailers.', correct: false}
     -
         question: 'After making a request with the test client, how do you instruct it to follow any redirects?'

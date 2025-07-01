@@ -74,7 +74,7 @@ questions:
         question: 'What is the command to validate your Doctrine ORM mapping files?'
         answers:
             - {value: 'bin/console doctrine:schema:validate', correct: true}
-            - {value: 'bin/console doctrine:mapping:validate', correct:false}
+            - {value: 'bin/console doctrine:mapping:validate', correct: false}
             - {value: 'bin/console orm:validate-schema', correct: false}
             - {value: 'bin/console debug:doctrine', correct: false}
     -
