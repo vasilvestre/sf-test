@@ -38,7 +38,7 @@
                         {% if not singleCategory %}
                             <div class="category-label">{{ question.category.name }}</div>
                         {% endif %}
-                        <div class="question-text">{{ question.text }}</div>
+                        <div class="question-text">{{ question.text|nl2br }}</div>
 
                         {% for answer in question.answers %}
                             <div class="answer-option">

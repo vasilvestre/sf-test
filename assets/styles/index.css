@@ -1,6 +1,6 @@
 /* Quiz index page styles */
 .quiz-container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
@@ -69,4 +69,55 @@
     border-radius: 5px;
     padding: 20px;
     background-color: #f9f9f9;
+}
+
+/* Most failed questions styles */
+.most-failed-questions {
+    margin-bottom: 30px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.most-failed-questions h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.failed-questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.failed-question-item {
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    background-color: white;
+    position: relative;
+}
+
+.question-text {
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.failure-count {
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.category-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #3498db;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 0.8rem;
 }

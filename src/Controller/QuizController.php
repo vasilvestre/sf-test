@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\QuizResult;
 use App\Repository\CategoryRepository;
 use App\Repository\QuestionRepository;
+use App\Repository\QuestionFailureRepository;
 use App\Repository\QuizResultRepository;
 use App\Service\QuizLoader;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,6 +27,7 @@ class QuizController extends AbstractController
         #[Autowire(service: QuestionRepository::class)] private readonly QuestionRepository         $questionRepository,
         #[Autowire(service: EntityManagerInterface::class)] private readonly EntityManagerInterface $entityManager,
         #[Autowire(service: QuizResultRepository::class)] private readonly QuizResultRepository     $quizResultRepository,
+        #[Autowire(service: QuestionFailureRepository::class)] private readonly QuestionFailureRepository $questionFailureRepository,
         private readonly ChartBuilderInterface                                                      $chartBuilder
     ) {
     }
@@ -58,12 +60,16 @@ class QuizController extends AbstractController
             ];
         }
 
+        // Get the most failed questions
+        $mostFailedQuestions = $this->questionFailureRepository->findMostFailedQuestions(5);
+
         return $this->render('quiz/index.html.twig', [
             'categories' => $categories,
             'totalQuizzesTaken' => $totalQuizzesTaken,
             'averageSuccessRate' => $averageSuccessRate,
             'chart' => $chart,
             'categoryStats' => $categoryStats,
+            'mostFailedQuestions' => $mostFailedQuestions,
         ]);
     }
 
@@ -155,6 +161,21 @@ class QuizController extends AbstractController
             // Question is correct if all correct answers were selected and no incorrect answers were selected
             if ($selectedCorrectCount == $totalCorrectCount && $incorrectlySelected == 0) {
                 $correctAnswers++;
+            } else {
+                // Record this question as failed
+                $questionFailure = $this->questionFailureRepository->findByQuestion($question);
+
+                if (!$questionFailure) {
+                    // Create a new record if it doesn't exist
+                    $questionFailure = new \App\Entity\QuestionFailure();
+                    $questionFailure->setQuestion($question);
+                    $questionFailure->setFailureCount(1);
+                } else {
+                    // Increment the failure count
+                    $questionFailure->incrementFailureCount();
+                }
+
+                $this->entityManager->persist($questionFailure);
             }
         }
 

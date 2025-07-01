@@ -48,6 +48,21 @@
                     {{ render_chart(chart, {'id': 'index-performance-chart'}) }}
                 </div>
             </div>
+
+            {% if mostFailedQuestions|length > 0 %}
+                <div class="most-failed-questions">
+                    <h3>Questions You Struggle With</h3>
+                    <div class="failed-questions-list">
+                        {% for questionFailure in mostFailedQuestions %}
+                            <div class="failed-question-item">
+                                <div class="question-text">{{ questionFailure.question.text }}</div>
+                                <div class="failure-count">Failed {{ questionFailure.failureCount }} times</div>
+                                <div class="category-badge">{{ questionFailure.question.category.name }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
         {% endif %}
 
         <h2>Select a Category</h2>

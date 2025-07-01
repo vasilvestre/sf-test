@@ -38,7 +38,7 @@
                     <h3>Review Your Answers</h3>
                     {% for question in questionsWithAnswers %}
                         <div class="question-review">
-                            <div class="question-text">{{ question.text }}</div>
+                            <div class="question-text">{{ question.text|nl2br }}</div>
                             <div class="answers-list">
                                 {% for answer in question.answers %}
                                     <div class="answer-item {% if answer.id in question.selectedAnswers %}selected{% endif %} {% if answer.isCorrect %}correct{% endif %}">
