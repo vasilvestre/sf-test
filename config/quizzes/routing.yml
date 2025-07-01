@@ -1,36 +1,72 @@
 category: Routing
 questions:
     -
-        question: 'Using XML or YAML, how to declare a route for a specific domain/host?'
+        question: 'Using attributes, how do you declare a route for a specific domain/host?'
         answers:
-            - {value: Add a "domain" attribute,    correct: false}
-            - {value: Add a "host" attribute,      correct: true}
-            - {value: Add a "path" attribute,      correct: false}
-            - {value: Add a "subdomain" attribute, correct: false}
+            - {value: 'Add a "domain" argument to the #[Route] attribute',    correct: false}
+            - {value: 'Add a "host" argument to the #[Route] attribute',      correct: true}
+            - {value: 'Add a "path" argument to the #[Route] attribute',      correct: false}
+            - {value: 'Add a "subdomain" argument to the #[Route] attribute', correct: false}
     -
-        question: 'What variable can be used as controller argument to get the name of the route name?'
+        question: 'What argument can be used in a controller action to get the current route name?'
         answers:
-            - {value: $_route,            correct: true}
-            - {value: $_controller,       correct: false}
-            - {value: $_method,           correct: false}
-            - {value: $_action,           correct: false}
+            - {value: 'string $_route',            correct: true}
+            - {value: 'string $_controller',       correct: false}
+            - {value: 'string $_method',           correct: false}
+            - {value: 'string $_action',           correct: false}
     -
-        question: 'Using XML, how to ensure that a route is accessed via HTTPS?'
+        question: 'Using attributes, how do you ensure that a route is accessed via HTTPS?'
         answers:
-            - {value: schemes="https",  correct: true}
-            - {value: https="true",     correct: false}
-            - {value: protocol="https", correct: false}
-            - {value: ensure="https",   correct: false}
+            - {value: '#[Route(schemes: ["https"])]',  correct: true}
+            - {value: '#[Route(https: true)]',     correct: false}
+            - {value: '#[Route(protocol: "https")]', correct: false}
+            - {value: '#[Route(ensure: "https")]',   correct: false}
     -
-        question: 'Three special routing parameters are available in Symfony:'
+        question: 'What are the three special routing parameters available in Symfony for controller actions?'
         answers:
             - {value: "_controller, _locale, _schemes",      correct: false}
             - {value: "_route, _controller, _action",        correct: false}
             - {value: "_controller, _locale, _format",       correct: true}
             - {value: "_locale, _format and another one.",   correct: false}
     -
-        question: 'How to generate absolute URL for a given route in controller ?'
+        question: 'How do you generate an absolute URL for a given route in a controller?'
         answers:
-            - {value: "By using UrlGeneratorInterface::ABSOLUTE_URL as third parameter for generateUrl", correct: true}
-            - {value: "generateUrl generate absolute URL by default", correct: false}
-            - {value: "$this->generateAbsoluteUrl()", correct: false}
+            - {value: "Use UrlGeneratorInterface::ABSOLUTE_URL as the third argument for generateUrl()", correct: true}
+            - {value: "generateUrl() generates absolute URLs by default", correct: false}
+            - {value: "Use the generateAbsoluteUrl() method", correct: false}
+            - {value: "Set a global configuration to always generate absolute URLs", correct: false}
+    -
+        question: 'Which attribute would you use to define a route that only responds to POST requests?'
+        answers:
+            - {value: '#[Route(methods: ["POST"])]', correct: true}
+            - {value: '#[Post("/path")]', correct: true}
+            - {value: '#[Route(method: "POST")]', correct: false}
+            - {value: '#[RequiresMethod("POST")]', correct: false}
+    -
+        question: 'How can you define a route requirement to ensure a parameter is an integer?'
+        answers:
+            - {value: '#[Route("/user/{id}", requirements: ["id" => "\d+"])]', correct: true}
+            - {value: '#[Route("/user/{id<^\d+$>}")]', correct: true}
+            - {value: '#[Route("/user/{id}", assert: ["id" => "is_int"])]', correct: false}
+            - {value: 'Type-hinting the controller argument as `int $id` is sufficient for validation.', correct: false}
+    -
+        question: 'What is the purpose of route priorities?'
+        answers:
+            - {value: 'To control the order in which routes are matched when multiple could handle a URL.', correct: true}
+            - {value: 'To assign a higher performance profile to certain routes.', correct: false}
+            - {value: 'To determine which routes are loaded first by the application.', correct: false}
+            - {value: 'To automatically redirect from a lower priority route to a higher one.', correct: false}
+    -
+        question: 'How do you define a route that is only available in the "dev" environment?'
+        answers:
+            - {value: 'By placing the route definition in `config/routes/dev/your_routes.yaml`.', correct: true}
+            - {value: 'By adding `env: "dev"` to the `#[Route]` attribute.', correct: true}
+            - {value: 'By using `#[Route(condition: "context.getEnvironment() === ''dev''")]`', correct: true}
+            - {value: 'It is not possible to restrict routes by environment.', correct: false}
+    -
+        question: 'What does the `controller` option in a route definition specify?'
+        answers:
+            - {value: 'The fully qualified class name and method to be executed (e.g., `App\Controller\DefaultController::index`).', correct: true}
+            - {value: 'The service ID of the controller.', correct: false}
+            - {value: 'The name of the controller file.', correct: false}
+            - {value: 'The URL path to the controller.', correct: false}

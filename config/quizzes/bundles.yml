@@ -1,79 +1,80 @@
 category: Bundles
 questions:
     -
-        question: 'What is the method name in the Kernel class to enable bundles?'
+        question: 'In a modern Symfony application using Flex, where are bundles typically registered?'
         answers:
-            - {value: enable(),          correct: false}
-            - {value: enableBundles(),   correct: false}
-            - {value: register(),        correct: false}
-            - {value: registerBundles(), correct: true}
+            - {value: 'config/bundles.php', correct: true}
+            - {value: 'src/Kernel.php in the registerBundles() method', correct: false}
+            - {value: 'composer.json under the "extra.symfony.bundles" key', correct: false}
+            - {value: 'config/services.yaml', correct: false}
     -
-        question: 'Which method is executed once when bundle is loaded after cache is cleared?'
+        question: 'Which method in a bundle class is executed during container compilation to allow for service container modifications?'
         answers:
-            - {value: __construct(), correct: false}
-            - {value: build(),       correct: true}
-            - {value: boot(),        correct: false}
-            - {value: bootstrap(),   correct: false}
+            - {value: 'build(ContainerBuilder $container)', correct: true}
+            - {value: 'boot()', correct: false}
+            - {value: '__construct()', correct: false}
+            - {value: 'load(ContainerBuilder $container)', correct: false}
     -
-        question: 'Which of these bundles comes with the Symfony Standard Edition?'
+        question: 'Which bundle is essential for providing core framework functionalities like routing, caching, and templating integration?'
         answers:
-            - {value: SensioFrameworkExtraBundle, correct: true}
-            - {value: DoctrineFixturesBundle,     correct: false}
-            - {value: DoctrineMigrationBundle,    correct: false}
-            - {value: SensioDoctrineBundle,       correct: false}
+            - {value: 'FrameworkBundle', correct: true}
+            - {value: 'SensioFrameworkExtraBundle', correct: false}
+            - {value: 'TwigBundle', correct: false}
+            - {value: 'DoctrineBundle', correct: false}
     -
-        question: 'Using Config component, which class is used to define hierarchy of configuration values?'
+        question: 'When defining bundle-specific configuration, which class is used to build the configuration tree?'
         answers:
-            - {value: Symfony\Component\Config\Definition\Builder\TreeBuilder,      correct: true}
-            - {value: Symfony\Component\Config\Definition\Builder\HierarchyBuilder, correct: false}
-            - {value: Symfony\Component\Config\Definition\Builder\NodeBuilder,      correct: false}
-            - {value: Symfony\Component\Config\Definition\Builder\Builder,          correct: false}
+            - {value: 'Symfony\Component\Config\Definition\Builder\TreeBuilder', correct: true}
+            - {value: 'Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition', correct: false}
+            - {value: 'Symfony\Component\Config\Definition\Configuration', correct: false}
+            - {value: 'Symfony\Component\DependencyInjection\Loader\YamlFileLoader', correct: false}
     -
-        question: 'Using Config component, which of these configuration node types are available?'
+        question: 'Which of these are valid configuration node types in the Config component?'
         answers:
-            - {value: scalar, correct: true}
-            - {value: array,  correct: true}
-            - {value: enum,   correct: true}
-            - {value: string, correct: false}
+            - {value: 'scalar', correct: true}
+            - {value: 'array', correct: true}
+            - {value: 'enum', correct: true}
+            - {value: 'boolean', correct: true}
+            - {value: 'integer', correct: true}
+            - {value: 'string', correct: false}
     -
-        question: 'Using Config component, which of these methods are existing?'
+        question: 'In a bundle''s configuration definition, which method marks a configuration key as mandatory?'
         answers:
-            - {value: useAttributeAsKey(), correct: true}
-            - {value: isRequired(),        correct: true}
-            - {value: setDefaultValue(),   correct: false}
-            - {value: setValidation(),     correct: false}
+            - {value: 'isRequired()', correct: true}
+            - {value: 'cannotBeEmpty()', correct: false}
+            - {value: 'defaultValue(null)', correct: false}
+            - {value: 'required()', correct: false}
     -
-        question: 'Which method allows to override bundle in a bundle class?'
+        question: 'How can a bundle load its own service definitions?'
         answers:
-            - {value: "public function getParent()",       correct: true}
-            - {value: "public function getBundle()",       correct: false}
-            - {value: "public function getParentBundle()", correct: false}
-            - {value: "public function getChild()",        correct: false}
+            - {value: 'By creating a class that implements `ExtensionInterface` and loading a services file (e.g., services.xml) in the `load()` method.', correct: true}
+            - {value: 'By placing a `services.yaml` file in the `config/` directory of the bundle.', correct: false}
+            - {value: 'By adding a `services` key to the main `composer.json` file.', correct: false}
+            - {value: 'Symfony automatically discovers and loads all `services.yaml` files in all bundles.', correct: false}
     -
-        question: 'What is the correct load() method definition in Symfony\Component\DependencyInjection\Extension\ExtensionInterface?'
+        question: 'What is the correct signature for the `load()` method in a bundle''s `Extension` class?'
         answers:
-            - {value: "public function load(array $configs, ContainerBuilder $container)", correct: true}
-            - {value: "public function load(array $config, ContainerBuilder $container)",  correct: false}
-            - {value: "public function load(ContainerBuilder $container, array $configs)", correct: false}
-            - {value: "public function load(ContainerBuilder $container, array $config)",  correct: false}
+            - {value: 'public function load(array $configs, ContainerBuilder $container)', correct: true}
+            - {value: 'public function load(array $config, ContainerBuilder $container)', correct: false}
+            - {value: 'public function load(ContainerBuilder $container, array $configs)', correct: false}
+            - {value: 'public function load(ContainerBuilder $container)', correct: false}
     -
-        question: 'Using Symfony dependency injection container, how can you retrieve all bundles list?'
+        question: 'How can you get a list of all registered bundles from the service container?'
         answers:
-            - {value: "$container->getParameter('kernel.bundles')",       correct: true}
-            - {value: "$container->get('kernel')->getBundles()",          correct: true}
-            - {value: "$container->getParameter('bundles')",              correct: false}
-            - {value: "$container->getParameter('application.bundles')",  correct: false}
+            - {value: 'By accessing the `kernel.bundles` parameter.', correct: true}
+            - {value: 'By calling `$container->get(''bundle_guesser'')->getBundles()`.', correct: false}
+            - {value: 'It is not possible to get the list of bundles from the container.', correct: false}
+            - {value: 'By calling `$this->getParameter(''bundles'')` from a controller.', correct: false}
     -
-        question: 'True or False ? the entry point of a Bundle MUST implement `Symfony\Component\HttpKernel\Bundle\BundleInterface` interface.'
+        question: 'True or False: A bundle''s main class must extend `Symfony\Component\HttpKernel\Bundle\Bundle`.'
         answers:
-            - {value: "True",    correct: true}
-            - {value: "False",   correct: false}
+            - {value: 'True', correct: true}
+            - {value: 'False', correct: false}
     -
-        question: 'According to Symfony best practices, which files files are mandatory in your bundle AcmeNameBundle directory Structure ?'
+        question: 'While not mandatory for functionality, what file is commonly expected in a reusable bundle for documentation?'
         answers:
-            - {value: "AcmeNameBundle.php", correct: true}
-            - {value: "README.md", correct: true}
-            - {value: "LICENSE", correct: true}
-            - {value: "Resources/doc/index.rst",   correct: true}
-            - {value: "Resources/config/routing.yml",   correct: false}
-            - {value: "Resources/config/services.yml",   correct: false}
+            - {value: 'README.md', correct: true}
+            - {value: 'LICENSE', correct: true}
+            - {value: 'docs/index.rst', correct: false}
+            - {value: 'CONTRIBUTING.md', correct: true}
+            - {value: 'services.yaml', correct: false}

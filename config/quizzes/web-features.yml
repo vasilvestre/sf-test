@@ -1,125 +1,72 @@
 category: Web Features
 questions:
     -
-        question: 'To destroy one variable within a PHP session you should use which method in PHP?'
+        question: 'In Symfony, how do you get the client''s IP address from the `Request` object?'
         answers:
-            - {value: 'Unset the variable in $HTTP_SESSION_VARS', correct: false}
-            - {value: 'Use the session_destroy() function', correct: false}
-            - {value: 'Use the session_unset() function', correct: false}
-            - {value: 'unset the variable in $_SESSION using unset()', correct: true}
-            - {value: 'Any of the above are acceptable in PHP', correct: false}
+            - {value: '$request->getClientIp()', correct: true}
+            - {value: '$request->ip()', correct: false}
+            - {value: '$_SERVER[''REMOTE_ADDR'']', correct: false}
+            - {value: '$request->getClient()->getIp()', correct: false}
     -
-        question: 'If you would like to store your session in the database, you would do which of the following?'
+        question: 'How do you access the session object from a controller that extends `AbstractController`?'
         answers:
-            - {value: 'It requires a custom PHP extension to change the session handler', correct: false}
-            - {value: 'Implement the session_set_save_handler() function', correct: false}
-            - {value: 'Create functions for each session handling step and use session_set_save_handler() to override PHP''s internal settings', correct: true}
-            - {value: 'Configure the session.save_handler INI directive to your session class', correct: false}
+            - {value: 'By type-hinting `SessionInterface $session` in the action method.', correct: true}
+            - {value: 'By calling `$this->get(''session'')`.', correct: false}
+            - {value: 'By calling `$request->getSession()`.', correct: true}
+            - {value: 'By using `$this->container->get(''session'')`.', correct: false}
     -
-        question: 'To destroy a PHP session completely, one must which of the following?'
+        question: 'How do you add a "flash" message to the session?'
         answers:
-            - {value: 'Regenerate the session ID using session_regenerate_id()', correct: false}
-            - {value: 'If cookies are used, destroy it', correct: true}
-            - {value: 'Use session_demolish() to completely destroy the session', correct: false}
-            - {value: 'Change the session name using session_name()', correct: false}
-            - {value: 'Destroy the session data using session_destroy()', correct: true}
+            - {value: '$this->addFlash(''success'', ''Your changes were saved!'');', correct: true}
+            - {value: '$request->getSession()->getFlashBag()->add(''success'', ''Message'');', correct: true}
+            - {value: '$session->flash(''success'', ''Message'');', correct: false}
+            - {value: '$this->setFlash(''success'', ''Message'');', correct: false}
     -
-        question: 'If you would like to change the session ID generation function, which of the following is the best approach for PHP?'
+        question: 'How do you create and send a cookie with a `Response`?'
         answers:
-            - {value: 'Set the session.hash_function INI configuration directive', correct: true}
-            - {value: 'Use the session_set_id_generator() function', correct: false}
-            - {value: 'Set the session id by force using the session_id() function', correct: false}
-            - {value: 'Use the session_regenerate_id() function', correct: false}
-            - {value: 'Implement a custom session handler', correct: false}
+            - {value: 'Create a `Cookie` object and add it to the `Response` headers.', correct: true}
+            - {value: 'Call `$response->withCookie(new Cookie(...))`.', correct: false}
+            - {value: 'Use the native `setcookie()` function.', correct: false}
+            - {value: 'Set the cookie directly in the `$response->headers` array.', correct: false}
     -
-        question: | 
-                    Consider the following HTML fragment:
-                    <select name="?????" multiple>
-                    <option value="1">Item #1</option>
-                    <!-- ... more options ... -->
-                    </select>
-                    Which of the following name attributes should be used to capture all of the data from the user in PHP?
+        question: 'Which method on the `Request` object checks if the request method is POST?'
         answers:
-            - {value: 'myselectbox=[]', correct: false}
-            - {value: 'myselectbox[]', correct: true}
-            - {value: 'myselectbox[''multiple'']', correct: false}
-            - {value: 'myselectbox{''multiple''}', correct: false}
-            - {value: 'myselectbox', correct: false}
+            - {value: '$request->isMethod(''POST'')', correct: true}
+            - {value: '$request->getMethod() === ''POST''', correct: true}
+            - {value: '$request->isPostRequest()', correct: false}
+            - {value: '$_SERVER[''REQUEST_METHOD''] === ''POST''', correct: false}
     -
-        question: 'When uploading a file using HTTP, which variable can be used to locate the file on PHP''s local filesystem?'
+        question: 'What is the purpose of the `UploadedFile` class in the HttpFoundation component?'
         answers:
-            - {value: '$_FILES[''fieldname''][''tmp_name'']', correct: true}
-            - {value: '$_FILES[''fieldname'']', correct: false}
-            - {value: '$_FILES[''fieldname''][0][''filename'']', correct: false}
-            - {value: '$_FILES[''fieldname''][''filename'']', correct: false}
-            - {value: 'None of the above', correct: false}
+            - {value: 'To represent a file uploaded through a form and provide methods for moving it.', correct: true}
+            - {value: 'To handle file downloads.', correct: false}
+            - {value: 'To create temporary files on the server.', correct: false}
+            - {value: 'To validate file uploads based on MIME type.', correct: false}
     -
-        question: 'To force a user to redirect to a new URL from within a PHP script, which of the following should be used?'
+        question: 'How do you get the value of a request header (e.g., `User-Agent`)?'
         answers:
-            - {value: 'Send a HTTP "Location:" header', correct: true}
-            - {value: 'Use the HTML <redirect> Tag', correct: false}
-            - {value: 'Send a HTTP "Forward:" header', correct: false}
-            - {value: 'Use the redirect() function', correct: false}
+            - {value: '$request->headers->get(''User-Agent'')', correct: true}
+            - {value: '$request->getHeader(''User-Agent'')', correct: false}
+            - {value: '$_SERVER[''HTTP_USER_AGENT'']', correct: false}
+            - {value: '$request->get(''User-Agent'')', correct: false}
     -
-        question: 'Setting a cookie on the client in PHP can be best accomplished by:'
+        question: 'What is the recommended way to create a `JsonResponse` in a controller?'
         answers:
-            - {value: 'Use the add_cookie() function', correct: false}
-            - {value: 'Use the setcookie() function', correct: true}
-            - {value: 'Use the the apache_send_header() function', correct: false}
-            - {value: 'Setting a variable in the $_COOKIE superglobal', correct: false}
+            - {value: 'Use the `$this->json()` helper method.', correct: true}
+            - {value: 'Create a new `JsonResponse` object manually.', correct: true}
+            - {value: 'Return a `Response` object with a JSON string and the correct `Content-Type` header.', correct: false}
+            - {value: 'Use `json_encode()` and return the result.', correct: false}
     -
-        question: 'How does one create a cookie which will exist only until the browser session is terminated?'
+        question: 'How do you create a response that forces a file download?'
         answers:
-            - {value: 'You cannot create cookies that expire when the browser session is terminated', correct: false}
-            - {value: 'Setting the expiration time for a cookie to a time in the distant future', correct: false}
-            - {value: 'Do not provide a cookie expiration time', correct: true}
-            - {value: 'Enable Cookie Security', correct: false}
-            - {value: 'Set a cookie without a domain', correct: false}
+            - {value: 'Return a `BinaryFileResponse` object.', correct: true}
+            - {value: 'Set the `Content-Disposition` header to `attachment`.', correct: true}
+            - {value: 'Use the `$this->file()` helper method in a controller.', correct: true}
+            - {value: 'Return a `StreamedResponse` with the file contents.', correct: false}
     -
-        question: 'Setting a HTTP cookie on the client which is not URL-encoded is done how in PHP?'
+        question: 'What does `$request->getSchemeAndHttpHost()` return?'
         answers:
-            - {value: 'Use the setrawcookie() function', correct: true}
-            - {value: 'Set the cookies.urlencode INI directive to false', correct: false}
-            - {value: 'Use urldecode() on the return value of setcookie()', correct: false}
-            - {value: 'Setting the $no_encode parameter of setcookie() to a boolean ''true''', correct: false}
-            - {value: 'All cookies must be URL encoded', correct: false}
-    -
-        question: 'During an HTTP authentication, how does one determine the username and password provided by the browser?'
-        answers:
-            - {value: 'Parse the HTTP headers manually using http_get_headers()', correct: false}
-            - {value: 'Use the get_http_username() and get_http_password() functions', correct: false}
-            - {value: 'Use the $_SERVER[''HTTP_USER''] and $_SERVER[''HTTP_PASSWORD''] variables', correct: false}
-            - {value: 'Use the $_SERVER[''PHP_AUTH_USER''] and $_SERVER[''PHP_AUTH_PW''] variables', correct: true}
-            - {value: 'Parse the $_SERVER[''REQUEST_URI''] variable', correct: false}
-    -
-        question: | 
-                    Consider the following function:
-                    function redirect($url) {
-                        // Check to make sure we haven't already sent
-                        // the header:
-                        if (/*???????*/) {
-                            header("Location: $url");
-                        }
-                    }
-                    What conditional should replace the ????? above?
-        answers:
-            - {value: '!in_array("Location: $url", headers_list())', correct: true}
-            - {value: '!header_exists("Location: $url")', correct: false}
-            - {value: '!header_location($url)', correct: false}
-            - {value: ' $_SERVER[''HTTP_LOCATION''] != $url', correct: false}
-    -
-        question: 'One can ensure that headers can always be sent from a PHP script by doing what?'
-        answers:
-            - {value: 'Enable header buffering in PHP', correct: false}
-            - {value: 'Set the header.force INI directive to true', correct: false}
-            - {value: 'Enable output buffering in PHP', correct: true}
-            - {value: 'There is no way to ensure that headers can always be set, they must always be checked', correct: false}
-            - {value: 'None of the above', correct: false}
-    -
-        question: 'Which of the following is not a valid fopen() access mode:'
-        answers:
-            - {value: 'b', correct: true}
-            - {value: 'x', correct: false}
-            - {value: 'a', correct: false}
-            - {value: 'w', correct: false}
-            - {value: 'r+', correct: false}
+            - {value: 'The scheme and host (e.g., "https://example.com").', correct: true}
+            - {value: 'The full URL including the path.', correct: false}
+            - {value: 'Only the host (e.g., "example.com").', correct: false}
+            - {value: 'Only the scheme (e.g., "https").', correct: false}

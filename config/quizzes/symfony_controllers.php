@@ -51,7 +51,27 @@ return [
                 ['value' => '$request->query->get(\'param\')', 'correct' => true],
                 ['value' => '$request->get(\'param\')', 'correct' => false],
                 ['value' => '$request->getQuery(\'param\')', 'correct' => false],
-                ['value' => '$request->params->get(\'param\')', 'correct' => false],
+                ['value' => '$request->params->get('param')', 'correct' => false],
+            ],
+        ],
+        [
+            'question' => 'How do you define a service in Symfony 7 using attributes?',
+            'difficulty' => 3,
+            'answers' => [
+                ['value' => '#[AsService]', 'correct' => true],
+                ['value' => '#[Service]', 'correct' => false],
+                ['value' => '#[Inject]', 'correct' => false],
+                ['value' => '#[Component]', 'correct' => false],
+            ],
+        ],
+        [
+            'question' => 'Which attribute is used to autowire a service in a controller\'s constructor?',
+            'difficulty' => 2,
+            'answers' => [
+                ['value' => '#[Autowire]', 'correct' => true],
+                ['value' => '#[Inject]', 'correct' => false],
+                ['value' => '#[Wants]', 'correct' => false],
+                ['value' => '#[Needs]', 'correct' => false],
             ],
         ],
     ],

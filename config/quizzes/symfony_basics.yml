@@ -41,3 +41,35 @@ questions:
             - {value: "php bin/console clear:cache", correct: false}
             - {value: "php bin/console cache:flush", correct: false}
             - {value: "php bin/console cache:remove", correct: false}
+    -
+        question: "Which new component in Symfony 7 provides a way to test time-dependent code?"
+        difficulty: 2
+        answers:
+            - {value: "Clock", correct: true}
+            - {value: "TimeMachine", correct: false}
+            - {value: "Chronos", correct: false}
+            - {value: "Timer", correct: false}
+    -
+        question: "What is the purpose of the new Webhook component in Symfony 7?"
+        difficulty: 2
+        answers:
+            - {value: "To handle incoming webhooks from third-party services", correct: true}
+            - {value: "To create outgoing webhooks to notify other applications", correct: false}
+            - {value: "To manage and schedule cron jobs", correct: false}
+            - {value: "To provide a secure way to expose APIs", correct: false}
+    -
+        question: "Which component was introduced in Symfony 7 to manage and trigger scheduled tasks?"
+        difficulty: 2
+        answers:
+            - {value: "Scheduler", correct: true}
+            - {value: "Cron", correct: false}
+            - {value: "Tasker", correct: false}
+            - {value: "Dispatcher", correct: false}
+    -
+        question: "What is the primary benefit of using the AssetMapper component in Symfony 7?"
+        difficulty: 3
+        answers:
+            - {value: "It manages JavaScript and CSS without needing a bundler like Webpack.", correct: true}
+            - {value: "It automatically optimizes images and other assets.", correct: false}
+            - {value: "It provides a CDN for serving assets.", correct: false}
+            - {value: "It integrates with popular JavaScript frameworks like React and Vue.", correct: false}

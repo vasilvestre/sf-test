@@ -1,72 +1,72 @@
 category: Security
 questions:
     -
-        question: 'Which php.ini directive should be disabled to prevent the execution of a remote PHP script via an include or require construct?'
+        question: 'What is the main component for handling security in Symfony?'
         answers:
-            - {value: 'You cannot disable remote PHP script execution', correct: false}
-            - {value: 'curl.enabled', correct: false}
-            - {value: 'allow_remote_url', correct: false}
-            - {value: 'allow_url_fopen', correct: true}
-            - {value: 'allow_require', correct: false}
+            - {value: 'SecurityBundle', correct: true}
+            - {value: 'FirewallBundle', correct: false}
+            - {value: 'AccessControlBundle', correct: false}
+            - {value: 'UserBundle', correct: false}
     -
-        question: 'Which of the following php.ini directives should be disabled to improve the outward security of your application?'
+        question: 'In Symfony, what is a "firewall" in the context of security?'
         answers:
-            - {value: 'safe_mode', correct: false}
-            - {value: 'magic_quotes_gpc', correct: true}
-            - {value: 'register_globals', correct: true}
-            - {value: 'display_errors', correct: true}
-            - {value: 'allow_url_fopen', correct: true}
+            - {value: 'A part of the configuration that defines how to secure a set of URLs.', correct: true}
+            - {value: 'A hardware device that protects the server.', correct: false}
+            - {value: 'A service that filters incoming IP addresses.', correct: false}
+            - {value: 'A component that prevents XSS attacks.', correct: false}
     -
-        question: ' Which of the following list of potential data sources should be considered trusted?'
+        question: 'What is the recommended way to encode a user''s password in Symfony?'
         answers:
-            - {value: '$_ENV', correct: false}
-            - {value: '$_GET', correct: false}
-            - {value: '$__COOKIE', correct: false}
-            - {value: '$_SERVER', correct: false}
-            - {value: 'None of the above', correct: true}
+            - {value: 'Using the `PasswordHasher` component with a modern algorithm like Bcrypt or Argon2.', correct: true}
+            - {value: 'Storing it in plain text.', correct: false}
+            - {value: 'Using a simple hash like MD5 or SHA1.', correct: false}
+            - {value: 'Encrypting it with a secret key.', correct: false}
     -
-        question: |
-                    Consider the following code:
-                    session_start();
-                    if (!empty($_REQUEST['id'])
-                      && !empty($_REQUEST['quantity'])) {
-                      $id = scrub_id($_REQUEST['id']);
-                      $quantity = scrub_quantity($_REQUEST['quantity'])
-                      $_SESSION['cart'][] = ['id' => $id,
-                                             'quantity' => $quantity];
-                    }
-                    /* .... */
-                    What potential security hole would this code snippet produce?
+        question: 'What is the purpose of a "voter" in Symfony''s authorization system?'
         answers:
-            - {value: 'Cross-Site Scripting Attack', correct: false}
-            - {value: 'There is no security hole in this code', correct: true}
-            - {value: 'Code Injection', correct: false}
-            - {value: 'SQL Injection', correct: false}
-            - {value: 'Cross-Site Request Forgery', correct: false}
+            - {value: 'To grant or deny access to resources based on custom business logic.', correct: true}
+            - {value: 'To vote for the next features in Symfony.', correct: false}
+            - {value: 'To authenticate users against a database.', correct: false}
+            - {value: 'To manage user roles and permissions.', correct: false}
     -
-        question: 'What is the best measure one can take to prevent a cross-site request forgery?'
+        question: 'How does Symfony protect against Cross-Site Request Forgery (CSRF) attacks?'
         answers:
-            - {value: 'Disallow requests from outside hosts', correct: false}
-            - {value: 'Add a secret token to all form submissions', correct: true}
-            - {value: 'Turn off allow_url_fopen in php.ini', correct: false}
-            - {value: 'Filter all output', correct: false}
-            - {value: 'Filter all input', correct: false}
+            - {value: 'By generating and validating a unique token for each form.', correct: true}
+            - {value: 'By automatically escaping all output.', correct: false}
+            - {value: 'By using a content security policy.', correct: false}
+            - {value: 'By setting the `SameSite` attribute on cookies.', correct: false}
     -
-        question: |
-                    Consider the following code:
-                    header("Location: {$_GET['url']}\");
-                    Which of the following values of $_GET['url'] would cause session fixation?
+        question: 'What is the `#[IsGranted]` attribute used for in a controller?'
         answers:
-            - {value: 'Session Fixation is not possible with this code snippet', correct: false}
-            - {value: 'http://www.zend.com/?PHPSESSID=123', correct: true}
-            - {value: 'PHPSESSID%611243', correct: false}
-            - {value: 'Set-Cookie%3A+PHPSESSID%611234', correct: false}
-            - {value: 'http%3A%2F%2Fwww.zend.com%2F%0D%0ASet-Cookie%3A+PHPSESSID%611234', correct: false}
+            - {value: 'To check for a specific role or permission before executing an action.', correct: true}
+            - {value: 'To grant a user a new role.', correct: false}
+            - {value: 'To check if the user is logged in.', correct: false}
+            - {value: 'To define a new security role.', correct: false}
     -
-        question: 'When implementing a permissions system for your Web site, what should always be done with regards to the session?'
+        question: 'What is the purpose of the `access_control` section in `security.yaml`?'
         answers:
-            - {value: 'You should not implement permission systems using sessions', correct: false}
-            - {value: 'Sessions should be cleared of all data and re-populated', correct: false}
-            - {value: 'The session key should be regenerated', correct: true}
-            - {value: 'The session should be destroyed', correct: false}
-            - {value: 'None of the above', correct: false}
+            - {value: 'To restrict access to URLs based on IP address, host, or roles.', correct: true}
+            - {value: 'To define the password hashing algorithm.', correct: false}
+            - {value: 'To configure the login form.', correct: false}
+            - {value: 'To enable or disable the firewall.', correct: false}
+    -
+        question: 'What is a "User Provider" in Symfony?'
+        answers:
+            - {value: 'A class that knows how to fetch a user from a storage system (e.g., database, LDAP).', correct: true}
+            - {value: 'A service that provides a list of all users.', correct: false}
+            - {value: 'A form type for creating new users.', correct: false}
+            - {value: 'A template for displaying user profiles.', correct: false}
+    -
+        question: 'Which component introduced in Symfony 5.2 simplifies creating authentication systems?'
+        answers:
+            - {value: 'The authenticator-based security system', correct: true}
+            - {value: 'The Guard authentication system', correct: false}
+            - {value: 'The SimplePreAuthenticator', correct: false}
+            - {value: 'The FormLoginAuthenticator', correct: false}
+    -
+        question: 'How can you access the currently logged-in user object in a controller?'
+        answers:
+            - {value: 'By using the `#[CurrentUser]` attribute on an action argument.', correct: true}
+            - {value: 'By calling `$this->getUser()`.', correct: true}
+            - {value: 'By type-hinting `UserInterface $user` in the action method.', correct: true}
+            - {value: 'By accessing `$this->container->get(''security.token_storage'')->getToken()->getUser()`.', correct: true}

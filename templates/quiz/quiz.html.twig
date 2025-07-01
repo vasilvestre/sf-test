@@ -25,6 +25,7 @@
                 {% endif %}
             </h1>
             <p>Answer the following questions to test your knowledge</p>
+            <p class="quiz-instructions"><strong>Note:</strong> Some questions may have multiple correct answers. Select all that apply.</p>
         </div>
 
         {% if questions|length > 0 %}
@@ -41,8 +42,8 @@
 
                         {% for answer in question.answers %}
                             <div class="answer-option">
-                                <input type="radio" id="answer-{{ question.id }}-{{ answer.id }}"
-                                       name="answers[{{ question.id }}]" value="{{ answer.id }}" required>
+                                <input type="checkbox" id="answer-{{ question.id }}-{{ answer.id }}"
+                                       name="answers[{{ question.id }}][]" value="{{ answer.id }}">
                                 <label for="answer-{{ question.id }}-{{ answer.id }}">{{ answer.text }}</label>
                             </div>
                         {% endfor %}

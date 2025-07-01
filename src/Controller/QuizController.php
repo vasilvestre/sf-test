@@ -104,17 +104,50 @@ class QuizController extends AbstractController
         $correctAnswers = 0;
         $totalQuestions = count($answers);
 
-        foreach ($answers as $questionId => $answerId) {
+        foreach ($answers as $questionId => $answerIds) {
             $question = $this->questionRepository->find($questionId);
             if (!$question) {
                 continue;
             }
 
+            // Get all correct answers for this question
+            $correctAnswerIds = [];
+            $selectedCorrectCount = 0;
+            $totalCorrectCount = 0;
+            $incorrectlySelected = 0;
+
+            // Count total correct answers and build array of correct answer IDs
             foreach ($question->getAnswers() as $answer) {
-                if ($answer->getId() == $answerId && $answer->isIsCorrect()) {
-                    $correctAnswers++;
-                    break;
+                if ($answer->isIsCorrect()) {
+                    $correctAnswerIds[] = $answer->getId();
+                    $totalCorrectCount++;
                 }
+            }
+
+            // If no answers were selected, skip this question
+            if (!is_array($answerIds) || empty($answerIds)) {
+                continue;
+            }
+
+            // Count how many correct answers were selected
+            foreach ($answerIds as $answerId) {
+                $found = false;
+                foreach ($question->getAnswers() as $answer) {
+                    if ($answer->getId() == $answerId) {
+                        $found = true;
+                        if ($answer->isIsCorrect()) {
+                            $selectedCorrectCount++;
+                        } else {
+                            $incorrectlySelected++;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            // Question is correct if all correct answers were selected and no incorrect answers were selected
+            if ($selectedCorrectCount == $totalCorrectCount && $incorrectlySelected == 0) {
+                $correctAnswers++;
             }
         }
 

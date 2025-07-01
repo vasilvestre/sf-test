@@ -1,53 +1,102 @@
 category: Validation
 questions:
     -
-        question: 'In order to use validation group, which interface will you implement on your object?'
+        question: 'How do you apply a validation constraint to a property in a class using attributes?'
         answers:
-            - {value: Symfony\Component\Validator\GroupValidationInterface,         correct: false}
-            - {value: Symfony\Component\Validator\GroupValidationProviderInterface, correct: false}
-            - {value: Symfony\Component\Validator\GroupProviderInterface,           correct: false}
-            - {value: Symfony\Component\Validator\GroupSequenceProviderInterface,   correct: true}
+            - {value: 'Add an attribute like `#[Assert\NotBlank]` to the property.', correct: true}
+            - {value: 'Define the constraint in a `validation.yaml` file.', correct: false}
+            - {value: 'Use the `#[Constraint]` attribute.', correct: false}
+            - {value: 'Implement the `Validatable` interface on the class.', correct: false}
     -
-        question: 'Using Validator component, which method is used to validate a value against a constraint?'
+        question: 'Which method on the validator service is used to validate an entire object?'
         answers:
-            - {value: "$validator->validate($object, $constraint)",      correct: true}
-            - {value: "$validator->validateValue($object, $constraint)", correct: false}
-            - {value: "$validator->isValid($object, $constraint)",       correct: false}
-            - {value: "$validator->validation($object, $constraint)",    correct: false}
+            - {value: '$validator->validate($object)', correct: true}
+            - {value: '$validator->validateObject($object)', correct: false}
+            - {value: '$validator->isValid($object)', correct: false}
+            - {value: '$validator->check($object)', correct: false}
     -
-        question: 'True or False ? All entities have at least 2 validation groups.'
+        question: 'What is the default validation group that is always applied unless others are specified?'
         answers:
-            - {value: "True",    correct: true}
-            - {value: "False",   correct: false}
+            - {value: '"Default"', correct: true}
+            - {value: '"Validation"', correct: false}
+            - {value: '"Standard"', correct: false}
+            - {value: 'There is no default group.', correct: false}
     -
-        question: 'True or False ? We can also apply constraints on class getters with ``addPropertyConstraint()``'
+        question: 'How can you apply constraints to a getter method instead of a property?'
         answers:
-            - {value: "True",    correct: false}
-            - {value: "False",   correct: true}
+            - {value: 'Place the constraint attribute directly above the getter method.', correct: true}
+            - {value: 'It is not possible to add constraints to getters.', correct: false}
+            - {value: 'Use the `#[Validate]` attribute on the getter.', correct: false}
+            - {value: 'Configure it in `validation.yaml` with a `getter:` key.', correct: false}
     -
-        question: 'True or False ? In Symfony:'
+        question: 'Which constraint is used to ensure that a collection of items does not contain duplicate values?'
         answers:
-            - {value: "Annotations mapping are enabled by default",                correct: false}
-            - {value: "UniqueEntity is provided by Doctrine Bundle",               correct: false}
-            - {value: "We can validate partial object with @Assert\\GroupSequence", correct: true}
-            - {value: "All assertions above are valid",                            correct: false}
+            - {value: 'Unique', correct: false}
+            - {value: 'All(new NotIdenticalTo())', correct: false}
+            - {value: 'UniqueEntity', correct: false}
+            - {value: 'There is no built-in constraint for this; you must create a custom one.', correct: true}
     -
-        question: 'Which constraints exist?'
+        question: 'Which of these are valid, built-in validation constraints?'
         answers:
-            - {value: "Blank", correct: true}
-            - {value: "IdenticalTo", correct: true}
-            - {value: "EqualTo", correct: true}
-            - {value: "SameAs", correct: false}
+            - {value: 'NotBlank', correct: true}
+            - {value: 'Email', correct: true}
+            - {value: 'Length', correct: true}
+            - {value: 'Url', correct: true}
+            - {value: 'Positive', correct: true}
+            - {value: 'SameAs', correct: false}
     -
-        question: 'Which annotation are valid ?'
+        question: 'Which attribute syntax is valid for the Choice constraint?'
         answers:
-            - {value: '@Assert\Choice({"male", "female", "other"})', correct: true}
-            - {value: '@Assert\Choice(choices = {"male", "female", "other"})', correct: true}
-            - {value: '@Assert\Choices({"male", "female", "other"})', correct: false}
-            - {value: '@Assert\Choices(choices = {"male", "female", "other"})', correct: false}
+            - {value: '#[Assert\Choice(["male", "female", "other"])]', correct: true}
+            - {value: '#[Assert\Choice(choices: ["male", "female", "other"])]', correct: true}
+            - {value: '#[Assert\Choices(["male", "female", "other"])]', correct: false}
+            - {value: '#[Assert\Choice(options: ["male", "female", "other"])]', correct: false}
     -
-        question: 'How to tell the validator to use a specific group ?'
+        question: 'How do you tell the validator to use a specific validation group (e.g., "registration") when validating an object?'
         answers:
-            - {value: 'pass one or more group names as the third argument of $validator->validate()', correct: true}
-            - {value: 'pass one or more group names as the second argument of $validator->validate()', correct: false}
-            - {value: 'use $validator->setValidationGroups(array)', correct: false}
+            - {value: '$validator->validate($user, null, ["registration"]);', correct: true}
+            - {value: '$validator->validate($user, ["registration"]);', correct: false}
+            - {value: '$validator->forGroup("registration")->validate($user);', correct: false}
+            - {value: 'You must configure this in the form or controller, not directly on the validator.', correct: false}
+    -
+        question: 'What is the purpose of validation group sequences?'
+        answers:
+            - {value: 'To define an ordered sequence of validation groups to be executed, stopping at the first group that fails.', correct: true}
+            - {value: 'To run multiple validation groups in parallel.', correct: false}
+            - {value: 'To group a sequence of constraints under a single name.', correct: false}
+            - {value: 'To validate a sequence of objects in an array.', correct: false}
+    -
+        question: 'How do you create a custom validation constraint?'
+        answers:
+            - {value: 'Create a constraint class extending `Symfony\Component\Validator\Constraint` and a validator class extending `Symfony\Component\Validator\ConstraintValidator`.', correct: true}
+            - {value: 'Create a class that implements `Symfony\Component\Validator\ConstraintInterface`.', correct: false}
+            - {value: 'Extend the `Symfony\Component\Validator\AbstractConstraint` class.', correct: false}
+            - {value: 'Tag a service with `validator.custom_constraint`.', correct: false}
+    -
+        question: 'Which constraint can be used to validate that a field''s value is a valid expression (e.g., using the ExpressionLanguage component)?'
+        answers:
+            - {value: 'Expression', correct: true}
+            - {value: 'IsTrue', correct: false}
+            - {value: 'Callback', correct: false}
+            - {value: 'Assert', correct: false}
+    -
+        question: 'How do you validate that at least one field in a group of fields is not empty?'
+        answers:
+            - {value: 'Use the `AtLeastOneOf` constraint at the class level.', correct: true}
+            - {value: 'Use the `SomeNotBlank` constraint.', correct: false}
+            - {value: 'Use a `GroupSequence` with `NotBlank` on each field.', correct: false}
+            - {value: 'This requires a custom callback constraint.', correct: false}
+    -
+        question: 'What is the purpose of the `#[Cascade]` attribute on a property holding a related object?'
+        answers:
+            - {value: 'It is not a standard validation attribute. You should use `#[Valid]`.', correct: true}
+            - {value: 'To cascade the deletion of the related object.', correct: false}
+            - {value: 'To automatically validate the related object.', correct: false}
+            - {value: 'To load the related object eagerly.', correct: false}
+    -
+        question: 'Which constraint is used to ensure a property on a Doctrine entity is unique in the database?'
+        answers:
+            - {value: 'Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity', correct: true}
+            - {value: 'Symfony\Component\Validator\Constraints\Unique', correct: false}
+            - {value: 'Doctrine\ORM\Mapping\UniqueConstraint', correct: false}
+            - {value: 'Assert\Unique', correct: false}

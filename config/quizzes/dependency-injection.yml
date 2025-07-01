@@ -1,102 +1,101 @@
 category: Dependency Injection
 questions:
     -
-        question: 'Which line allows to inject the my.custom.service?'
+        question: 'In a modern Symfony application with autowiring, how do you inject a service into another service?'
         answers:
-            - {value: <argument id="my.custom.service" />,                 correct: false}
-            - {value: <argument type="argument" id="my.custom.service" />, correct: false}
-            - {value: <argument type="service" id="my.custom.service" />,  correct: true}
-            - {value: <service id="my.custom.service" />,                  correct: false}
+            - {value: 'By type-hinting the service''s class or interface in the constructor.', correct: true}
+            - {value: 'By using `<argument type="service" id="my.custom.service" />` in `services.xml`.', correct: false}
+            - {value: 'By using `@service_id` in `services.yaml`.', correct: false}
+            - {value: 'By calling `$this->container->get(''my.custom.service'')`.', correct: false}
     -
-        question: 'Which types of injection are available in the component?'
+        question: 'Which types of dependency injection are supported by Symfony''s service container?'
         answers:
-            - {value: constructor, correct: true}
-            - {value: property,    correct: true}
-            - {value: method,      correct: true}
-            - {value: constant,    correct: false}
+            - {value: 'Constructor injection', correct: true}
+            - {value: 'Setter/Method injection', correct: true}
+            - {value: 'Property injection (for public properties)', correct: true}
+            - {value: 'Interface injection', correct: false}
     -
-        question: 'Using XML, which of these lines are correct to inject a service?'
+        question: 'In `services.yaml`, what is the correct syntax to explicitly inject the `monolog.logger` service into an argument?'
         answers:
-            - {value: <service id="my.service" />,                                                      correct: false}
-            - {value: <argument type="service" id="my.service" />,                                      correct: true}
-            - {value: <method setter="setService"><argument type="service" id="my.service" /></method>, correct: false}
-            - {value: <call method="setService"><argument type="service" id="my.service" /></call>,     correct: true}
+            - {value: 'arguments: [''@monolog.logger'']', correct: true}
+            - {value: 'arguments: [''%monolog.logger%'']', correct: false}
+            - {value: 'arguments: [''monolog.logger'']', correct: false}
+            - {value: 'inject: { logger: ''@monolog.logger'' }', correct: false}
     -
-        question: 'Which of these methods are available in ContainerInterface?'
+        question: 'What is the primary interface for interacting with the service container?'
         answers:
-            - {value: setScope($name),   correct: false}
-            - {value: getScope($name),   correct: false}
-            - {value: addScope($name),   correct: true}
-            - {value: enterScope($name), correct: true}
+            - {value: 'Psr\Container\ContainerInterface', correct: true}
+            - {value: 'Symfony\Component\DependencyInjection\Container', correct: false}
+            - {value: 'Symfony\Component\DependencyInjection\ContainerBuilder', correct: false}
+            - {value: 'Symfony\Component\DependencyInjection\ServiceLocator', correct: false}
     -
-        question: 'Using YML, which line allows to inject proxy of the service?'
+        question: 'In `services.yaml`, how do you configure a service to be lazy-loaded?'
         answers:
-            - {value: "proxy_service: true", correct: false}
-            - {value: "lazy: true",          correct: true}
-            - {value: "proxy: enabled",      correct: false}
-            - {value: "proxy: true",         correct: false}
+            - {value: 'lazy: true', correct: true}
+            - {value: 'proxy: true', correct: false}
+            - {value: 'shared: false', correct: false}
+            - {value: 'fetch: lazy', correct: false}
     -
-        question: 'Which method from CompilerPassInterface can modify the container here before it is dumped to PHP code?'
+        question: 'Which method must be implemented in a compiler pass class to modify the service container during compilation?'
         answers:
-            - {value: modify(),             correct: false}
-            - {value: processContainer(),   correct: false}
-            - {value: process(),            correct: true}
-            - {value: modifyContainer(),    correct: false}
+            - {value: 'process(ContainerBuilder $container)', correct: true}
+            - {value: 'compile(ContainerBuilder $container)', correct: false}
+            - {value: 'build(ContainerBuilder $container)', correct: false}
+            - {value: 'modify(ContainerBuilder $container)', correct: false}
     -
-        question: 'Using Dependency Injection, what is the correct way to override a service class using ContainerBuilder class?'
+        question: 'Using a compiler pass, how do you get the definition for a service to modify it?'
         answers:
-            - {value: "$container->getDefinition('my.service')->setClass('My\\Service\\Class')",   correct: true}
-            - {value: "$container->getService('my.service')->setDefinition('My\\Service\\Class')", correct: false}
-            - {value: "$container->getDefinition('my.service')->setService('My\\Service\\Class')", correct: false}
-            - {value: "$container->getService('my.service')->setClass('My\\Service\\Class')",      correct: false}
+            - {value: '$container->getDefinition(''service.id'')', correct: true}
+            - {value: '$container->findDefinition(''service.id'')', correct: true}
+            - {value: '$container->get(''service.id'')->getDefinition()', correct: false}
+            - {value: '$container->getServiceDefinition(''service.id'')', correct: false}
     -
-        question: 'Using a compiler pass, how do you retrieve a definition of service ?'
+        question: 'What is the purpose of a compiler pass?'
         answers:
-            - {value: "$container->getDefinition('my.service')",        correct: true}
-            - {value: "$container->findDefinition('my.service')",       correct: true}
-            - {value: "$container->retrieveDefinition('my.service')",   correct: false}
-            - {value: "$container->getService('my.service')",           correct: false}
+            - {value: 'To modify the service container definition before it is compiled and cached.', correct: true}
+            - {value: 'To compile application assets like CSS and JavaScript.', correct: false}
+            - {value: 'To validate the syntax of YAML configuration files.', correct: false}
+            - {value: 'To run database migrations.', correct: false}
     -
-        question: 'What are existing compiler pass order ?'
+        question: 'In the `dev` environment, where is the compiled and cached service container typically stored?'
         answers:
-            - {value: "PassConfig::TYPE_BEFORE_OPTIMIZATION", correct: true}
-            - {value: "PassConfig::TYPE_OPTIMIZE",            correct: true}
-            - {value: "PassConfig::TYPE_BEFORE_REMOVING",     correct: true}
-            - {value: "PassConfig::TYPE_REMOVE",              correct: true}
-            - {value: "PassConfig::TYPE_AFTER_COMPILING",     correct: false}
+            - {value: 'var/cache/dev/ContainerXXXXXX/App_KernelDevDebugContainer.php', correct: true}
+            - {value: 'app/cache/dev/appDevDebugProjectContainer.php', correct: false}
+            - {value: 'var/cache/dev/services.php', correct: false}
+            - {value: 'The container is not cached in the dev environment.', correct: false}
     -
-        question: "As dev environment, what is the name of dumped container ?"
+        question: 'True or False: Service container parameters can hold array values.'
         answers:
-            - {value: "appDevDebugProjectContainer.php",    correct: true}
-            - {value: "appDevProjectContainer.php",         correct: false}
-            - {value: "appDevDebugProjectServiceContainer", correct: false}
-            - {value: "appDevDebugContainer",               correct: false}
+            - {value: 'True', correct: true}
+            - {value: 'False', correct: false}
     -
-        question: "True or false, parameters can also contain array values ?"
+        question: 'What is the correct `services.yaml` syntax to inject the value of the `kernel.project_dir` parameter into a service argument?'
         answers:
-            - {value: "true", correct: true}
-            - {value: "false", correct: false}
+            - {value: 'arguments: [''%kernel.project_dir%'']', correct: true}
+            - {value: 'arguments: [''@kernel.project_dir'']', correct: false}
+            - {value: 'arguments: [''$kernel.project_dir'']', correct: false}
+            - {value: 'arguments: [''env(kernel.project_dir)'']', correct: false}
     -
-        question: "What is the correct syntax to inject a service app.mailer ?"
+        question: 'By default, are services defined in `services.yaml` public or private?'
         answers:
-            - {value: "arguments: ['@app.mailer']", correct: true}
-            - {value: "arguments: ['%app.mailer%']", correct: false}
-            - {value: "arguments: ['app.mailer']", correct: false}
+            - {value: 'Private', correct: true}
+            - {value: 'Public', correct: false}
     -
-        question: "What is the correct syntax to inject a parameter mailer.transport ?"
+        question: 'True or False: With the default configuration (`shared: true`), every time you request a service from the container, you receive the exact same instance.'
         answers:
-            - {value: "arguments: ['@mailer.transport']", correct: false}
-            - {value: "arguments: ['%mailer.transport%']", correct: true}
-            - {value: "arguments: ['mailer.transport']", correct: false}
+            - {value: 'True', correct: true}
+            - {value: 'False', correct: false}
     -
-        question: "How to define a service as private ?"
+        question: 'What does the `autowire: true` default setting in `services.yaml` enable?'
         answers:
-            - {value: "type: private", correct: false}
-            - {value: "scope: private", correct: false}
-            - {value: "public: false", correct: true}
-            - {value: "private: true", correct: false}
+            - {value: 'Symfony will automatically pass services to your constructor based on type-hints.', correct: true}
+            - {value: 'All services will be made public automatically.', correct: false}
+            - {value: 'It automatically generates wiring diagrams for your services.', correct: false}
+            - {value: 'It enables wiring of services from third-party bundles.', correct: false}
     -
-        question: "True or False, With default configuration each time you retrieve the service, you'll get the same instance ?"
+        question: 'What does the `autoconfigure: true` default setting in `services.yaml` enable?'
         answers:
-            - {value: "true", correct: true}
-            - {value: "false", correct: false}
+            - {value: 'Symfony will automatically register your services with the appropriate tags (e.g., as a command, event subscriber, etc.) based on the interfaces they implement.', correct: true}
+            - {value: 'It automatically configures the firewall and security settings.', correct: false}
+            - {value: 'It generates configuration files for you automatically.', correct: false}
+            - {value: 'It configures the application based on environment variables.', correct: false}

@@ -1,169 +1,142 @@
 category: The Command Line
 questions:
     -
-        question: 'Which helper is not available in the Console component?'
+        question: 'Which helper, previously available, has been deprecated in modern Symfony versions in favor of the `SymfonyStyle` I/O class?'
         answers:
-            - {value: QuestionHelper, correct: false}
-            - {value: TableHelper,    correct: false}
-            - {value: FileHelper,     correct: true}
-            - {value: DialogHelper,   correct: true}
+            - {value: 'QuestionHelper', correct: false}
+            - {value: 'TableHelper', correct: false}
+            - {value: 'DialogHelper', correct: true}
+            - {value: 'ProgressHelper', correct: false}
     -
-        question: 'Which event is not available in the Console Component?'
+        question: 'Which of these is NOT a standard event in the Console component?'
         answers:
-            - {value: ConsoleEvents::COMMAND,   correct: false}
-            - {value: ConsoleEvents::TERMINATE, correct: false}
-            - {value: ConsoleEvents::EXCEPTION, correct: false}
-            - {value: ConsoleEvents::LAUNCH,    correct: true}
+            - {value: 'ConsoleEvents::COMMAND', correct: false}
+            - {value: 'ConsoleEvents::TERMINATE', correct: false}
+            - {value: 'ConsoleEvents::ERROR', correct: false}
+            - {value: 'ConsoleEvents::LAUNCH', correct: true}
     -
-        question: 'How to launch Console application in interactive mode?'
+        question: 'How do you get a service from the container inside a command registered with autoconfiguration?'
         answers:
-            - {value: php app/console -s,            correct: true}
-            - {value: php app/console --interactive, correct: false}
-            - {value: no one,                        correct: false}
+            - {value: 'Inject it into the constructor.', correct: true}
+            - {value: 'Use `$this->getContainer()->get(''service.id'')`.', correct: false}
+            - {value: 'Use `$this->getApplication()->getKernel()->getContainer()->get(''service.id'')`.', correct: false}
+            - {value: 'Implement `ContainerAwareInterface`.', correct: false}
     -
-        question: 'Using Console component, which of these events are available in Symfony\Component\Console\ConsoleEvents?'
+        question: 'Which attribute is used to register a class as a console command in Symfony?'
         answers:
-            - {value: ConsoleEvents::COMMAND,   correct: true}
-            - {value: ConsoleEvents::TERMINATE, correct: true}
-            - {value: ConsoleEvents::EXCEPTION, correct: true}
-            - {value: ConsoleEvents::BEFORE,    correct: false}
-            - {value: ConsoleEvents::AFTER,     correct: false}
+            - {value: '#[AsCommand]', correct: true}
+            - {value: '#[ConsoleCommand]', correct: false}
+            - {value: '#[Command]', correct: false}
+            - {value: '#[AsConsole]', correct: false}
     -
-        question: 'Using Console component, which of these class allows to create custom output styles?'
+        question: 'Which class provides a stylized I/O experience for console commands (e.g., for creating tables, asking questions)?'
         answers:
-            - {value: Symfony\Component\Console\OutputFormatterStyle, correct: true}
-            - {value: Symfony\Component\Console\OutputStyleFormatter, correct: false}
-            - {value: Symfony\Component\Console\OutputStyle,          correct: false}
-            - {value: Symfony\Component\Console\OutputFormatter,      correct: false}
+            - {value: 'Symfony\Component\Console\Style\SymfonyStyle', correct: true}
+            - {value: 'Symfony\Component\Console\Formatter\OutputFormatterStyle', correct: false}
+            - {value: 'Symfony\Component\Console\Helper\HelperSet', correct: false}
+            - {value: 'Symfony\Component\Console\Input\ArgvInput', correct: false}
     -
-        question: 'What is the console command to create a new bundle?'
+        question: 'What is the `maker` command to create a new console command?'
         answers:
-            - {value: php app/console bundle:generate, correct: false}
-            - {value: php app/console generate:bundle, correct: true}
-            - {value: php app/console create:bundle,   correct: false}
-            - {value: php app/console bundle:create,   correct: false}
+            - {value: 'bin/console make:command', correct: true}
+            - {value: 'bin/console generate:command', correct: false}
+            - {value: 'bin/console make:console', correct: false}
+            - {value: 'bin/console new:command', correct: false}
     -
-        question: 'Which argument can be passed to the router:debug command?'
+        question: 'Which argument can be passed to the `debug:router` command to filter the output?'
         answers:
-            - {value: No argument can be passed, correct: false}
-            - {value: A regexp search filter,    correct: false}
-            - {value: A route limit,             correct: false}
-            - {value: A route name,              correct: true}
+            - {value: 'A route name or part of a route name', correct: true}
+            - {value: 'A controller name', correct: false}
+            - {value: 'A path', correct: false}
+            - {value: 'A method (e.g., GET, POST)', correct: false}
     -
-        question: 'What is the command to check the syntax of a Twig template?'
+        question: 'What is the command to check the syntax of all Twig templates in your application?'
         answers:
-            - {value: php app/console twig:lint,     correct: true}
-            - {value: php app/console twig:check,    correct: false}
-            - {value: php app/console twig:validate, correct: false}
-            - {value: php app/console twig:syntax,   correct: false}
+            - {value: 'bin/console lint:twig', correct: true}
+            - {value: 'bin/console twig:lint', correct: false}
+            - {value: 'bin/console debug:twig', correct: false}
+            - {value: 'bin/console twig:validate', correct: false}
     -
-        question: 'What is the console command to clear cache?'
+        question: 'What is the standard console command to clear the application cache?'
         answers:
-            - {value: php app/console cache:clear,      correct: true}
-            - {value: php app/console clear:cache,      correct: false}
-            - {value: php app/console cache:clean,      correct: false}
-            - {value: php app/console cache:invalidate, correct: false}
+            - {value: 'bin/console cache:clear', correct: true}
+            - {value: 'bin/console clear:cache', correct: false}
+            - {value: 'bin/console cache:warmup --clear', correct: false}
+            - {value: 'rm -rf var/cache/*', correct: false}
     -
-        question: 'Which tag name you should use when you register command as service?'
+        question: 'When registering a command as a service, what is the name of the tag you should use?'
         answers:
-            - {value: command.console,      correct: false}
-            - {value: console.command,      correct: true}
-            - {value: console,              correct: false}
-            - {value: command,              correct: false}
+            - {value: 'console.command', correct: true}
+            - {value: 'command.console', correct: false}
+            - {value: 'symfony.command', correct: false}
+            - {value: 'This is handled automatically by the `#[AsCommand]` attribute.', correct: true}
     -
-        question: 'What is the command line to list all known entities by doctrine 2 in your project ?'
+        question: 'What is the command to validate your Doctrine ORM mapping files?'
         answers:
-            - {value: 'php app/console doctrine:mapping:info',         correct: true}
-            - {value: 'php app/console doctrine:mapping:import',       correct: false}
-            - {value: 'php app/console doctrine:mapping:info --all',   correct: false}
-            - {value: 'php app/console doctrine:mapping:import --all', correct: false}
+            - {value: 'bin/console doctrine:schema:validate', correct: true}
+            - {value: 'bin/console doctrine:mapping:validate', correct:false}
+            - {value: 'bin/console orm:validate-schema', correct: false}
+            - {value: 'bin/console debug:doctrine', correct: false}
     -
-        question: 'What is the command line to validate the doctrine mapping files ?'
+        question: 'How do you display the complete configuration reference for a specific bundle (e.g., `framework`)?'
         answers:
-            - {value: 'php app/console doctrine:schema:validate',          correct: true}
-            - {value: 'php app/console doctrine:schema:update --dump-sql', correct: false}
-            - {value: 'php app/console doctrine:schema:update --force',    correct: false}
-            - {value: 'php app/console doctrine:mapping:convert',          correct: false}
-            - {value: 'php app/console doctrine:mapping:import',           correct: false}
+            - {value: 'bin/console config:dump-reference framework', correct: true}
+            - {value: 'bin/console debug:config framework', correct: false}
+            - {value: 'bin/console config:show framework', correct: false}
+            - {value: 'bin/console framework:config:dump', correct: false}
     -
-        question: "How do you display complete configuration of a bundle ?"
+        question: 'What is the `maker` command to create a new Doctrine entity?'
         answers:
-            - {value: "php app/console dump:config acme",                   correct: false}
-            - {value: "php app/console config:dump-reference acme",         correct: true}
-            - {value: "php app/console config:dump AcmeBundle",             correct: true}
-            - {value: "php app/console config:dump-reference AcmeBundle",   correct: true}
+            - {value: 'bin/console make:entity', correct: true}
+            - {value: 'bin/console doctrine:generate:entity', correct: false}
+            - {value: 'bin/console make:doctrine:entity', correct: false}
+            - {value: 'bin/console generate:entity', correct: false}
     -
-        question: 'Descriptors are objects to render documentation on Symfony Console Apps?'
+        question: 'What is the command to generate a new database migration based on your entity changes?'
         answers:
-            - {value: 'Yes', correct: true}
-            - {value: 'No',  correct: false}
+            - {value: 'bin/console doctrine:migrations:diff', correct: true}
+            - {value: 'bin/console doctrine:schema:update --diff', correct: false}
+            - {value: 'bin/console make:migration', correct: false}
+            - {value: 'bin/console doctrine:migrations:generate', correct: false}
     -
-        question: 'Does the Symfony Console component needs PHP globals internals variables to work?'
+        question: 'What is the command to execute pending Doctrine migrations?'
         answers:
-            - {value: 'Yes', correct: false}
-            - {value: 'No',  correct: true}
+            - {value: 'bin/console doctrine:migrations:migrate', correct: true}
+            - {value: 'bin/console doctrine:schema:update --force', correct: false}
+            - {value: 'bin/console doctrine:migrations:execute', correct: false}
+            - {value: 'bin/console doctrine:database:update', correct: false}
     -
-        question: 'What is the console command to create a new entity?'
+        question: 'Which verbosity level in a console command is the default?'
         answers:
-            - {value: php app/console doctrine:generate:entity, correct: true}
-            - {value: php app/console generate:entity,          correct: false}
-            - {value: php app/console database:create:entity,   correct: false}
-            - {value: php app/console doctrine:create:entity,   correct: false}
+            - {value: 'OutputInterface::VERBOSITY_NORMAL', correct: true}
+            - {value: 'OutputInterface::VERBOSITY_QUIET', correct: false}
+            - {value: 'OutputInterface::VERBOSITY_VERBOSE', correct: false}
+            - {value: 'OutputInterface::VERBOSITY_DEBUG', correct: false}
     -
-        question: 'What is the command to update the database from entities?'
+        question: 'In a command''s `configure()` method, what are the three possible modes for an `InputArgument`?'
         answers:
-            - {value: php app/console doctrine:schema:update,   correct: true}
-            - {value: php app/console doctrine:entity:update,   correct: false}
-            - {value: php app/console doctrine:entity --create, correct: false}
-            - {value: php app/console doctrine:schema:create,   correct: false}
+            - {value: 'REQUIRED, OPTIONAL, IS_ARRAY', correct: true}
+            - {value: 'REQUIRED, OPTIONAL, MULTIPLE', correct: false}
+            - {value: 'SINGLE, MULTI, REQUIRED', correct: false}
+            - {value: 'MANDATORY, SUGGESTED, REPEATABLE', correct: false}
     -
-        question: 'What is the right command name to load Doctrine fixtures?'
+        question: 'Which method is executed after `configure()` but before `execute()`, allowing you to interact with the user for missing input?'
         answers:
-            - {value: php app/console doctrine:fixtures:load,   correct: true}
-            - {value: php app/console doctrine:load:fixtures,   correct: false}
-            - {value: php app/console doctrine:fixtures,        correct: false}
-            - {value: php app/console doctrine:fixtures:import, correct: false}
+            - {value: 'interact(InputInterface $input, OutputInterface $output)', correct: true}
+            - {value: 'initialize(InputInterface $input, OutputInterface $output)', correct: false}
+            - {value: 'beforeExecute(InputInterface $input, OutputInterface $output)', correct: false}
+            - {value: 'askQuestions(InputInterface $input, OutputInterface $output)', correct: false}
     -
-        question: 'Symfony Console: which one(s) are valid verbosity levels ?'
+        question: 'Which of these `Question` classes is available in the Console component for asking for user input?'
         answers:
-            - {value: OutputInterface::VERBOSITY_QUIET,           correct: true}
-            - {value: OutputInterface::VERBOSITY_NORMAL,          correct: true}
-            - {value: OutputInterface::VERBOSITY_VERBOSE,         correct: true}
-            - {value: OutputInterface::VERBOSITY_VERY_VERBOSE,    correct: true}
-            - {value: OutputInterface::DEBUG,                     correct: false}
+            - {value: 'Symfony\Component\Console\Question\Question', correct: true}
+            - {value: 'Symfony\Component\Console\Question\ChoiceQuestion', correct: true}
+            - {value: 'Symfony\Component\Console\Question\ConfirmationQuestion', correct: true}
+            - {value: 'Symfony\Component\Console\Question\MultilineQuestion', correct: false}
     -
-        question: 'Symfony Console: InputArgument::REQUIRED, InputArgument::OPTIONAL and ... ?'
+        question: 'How do you correctly call another command from within your command class?'
         answers:
-            - {value: InputArgument::DEFAULT,    correct: false}
-            - {value: InputArgument::IS_ARRAY,   correct: true}
-            - {value: InputArgument::LIST,       correct: false}
-            - {value: InputArgument::ENUM,       correct: false}
-    -
-        question: 'Symfony Console: which of the following sentences are true?'
-        answers:
-            - {value: 'initialize() and configure() are invoked before the ConsoleEvents::COMMAND', correct: false}
-            - {value: 'ConsoleEvents::TERMINATE is dispatched even when an exception is thrown' ,   correct: true}
-            - {value: 'initialize has InputInterface, OutputInterface parameters',                  correct: true}
-            - {value: 'ConsoleEvents can be disabled',                                              correct: true}            
-    -
-        question: 'Which function are mandatory to your command class ?'
-        answers:
-            - {value: "configure()", correct: true}
-            - {value: "execute(InputInterface $input, OutputInterface $output)", correct: true}
-            - {value: "interact()", correct: false}
-            - {value: "initialize()", correct: false}
-    -
-        question: 'Which Question class are available ?'
-        answers:
-            - {value: "Symfony\\Component\\Console\\Question\\Question", correct: true}
-            - {value: "Symfony\\Component\\Console\\Question\\ChoiceQuestion", correct: true}
-            - {value: "Symfony\\Component\\Console\\Question\\ConfirmationQuestion", correct: true}
-            - {value: "Symfony\\Component\\Console\\Question\\SelectQuestion", correct: false}
-            - {value: "Symfony\\Component\\Console\\Question\\ValidQuestion", correct: false}
-    -
-        question: 'How to Call Other Commands in a command ?'
-        answers:
-            - {value: "$command->execute($input, $output);", correct: false}
-            - {value: "$command->run($input, $output);", correct: true}
-            - {value: "$command->call($input, $output);", correct: false}
-            - {value: "$command->forward($input, $output);", correct: false}
+            - {value: 'By finding the command and calling its `run()` method.', correct: true}
+            - {value: 'By dispatching a new `ConsoleCommandEvent`.', correct: false}
+            - {value: 'By creating a new Process and executing `bin/console ...`.', correct: false}
+            - {value: 'By calling `$this->forward(''app:other-command'', $input)`.', correct: false}

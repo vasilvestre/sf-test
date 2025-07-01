@@ -1,100 +1,106 @@
 category: HTTP
 questions:
     -
-        question: 'Which of these HTTP headers does not exist?'
+        question: 'Which of these is NOT a standard HTTP response header?'
         answers:
-            - {value: Control-Cache,  correct: true}
-            - {value: Cache-Modifier, correct: true}
-            - {value: Expires,        correct: false}
-            - {value: Last-Modified,  correct: false}
-            - {value: Cache-Control,  correct: false}
+            - {value: 'Cache-Control', correct: false}
+            - {value: 'Expires', correct: false}
+            - {value: 'Last-Modified', correct: false}
+            - {value: 'Control-Cache', correct: true}
     -
-        question: 'Which one of these Response methods check if cache must be revalidated?'
+        question: 'Which method on a `Response` object checks if the `Cache-Control` header is set to `must-revalidate`?'
         answers:
-            - {value: $response->mustRevalidate(),    correct: true}
-            - {value: $response->isRevalidated(),     correct: false}
-            - {value: $response->getRevalidated(),    correct: false}
-            - {value: $response->mustBeRevalidated(), correct: false}
+            - {value: '$response->mustRevalidate()', correct: true}
+            - {value: '$response->isRevalidating()', correct: false}
+            - {value: '$response->getCacheControl()->has(''must-revalidate'')', correct: false}
+            - {value: 'This method does not exist.', correct: false}
     -
-        question: 'Using a Response instance, which of these methods are available to check status code?'
+        question: 'Which method on a `Response` object can be used to check if the status code is in the 2xx range?'
         answers:
-            - {value: $response->isInformational(), correct: true}
-            - {value: $response->isSuccessful(),    correct: true}
-            - {value: $response->isRedirection(),   correct: true}
-            - {value: $response->isInvalid(),       correct: true}
-            - {value: $response->isError(),         correct: false}
+            - {value: '$response->isSuccessful()', correct: true}
+            - {value: '$response->isOk()', correct: true}
+            - {value: '$response->isClientError()', correct: false}
+            - {value: '$response->isServerError()', correct: false}
     -
-        question: 'How to access the `foo` GET parameter from Request object $request ?'
+        question: 'How do you access a GET parameter named `foo` from the `Request` object?'
         answers:
-            - {value: "$request->query->get('foo');",     correct: true}
-            - {value: "$request->request->get('foo');",   correct: false}
-            - {value: "{$request->query->all()}['foo'];", correct: true}
-            - {value: "$request->get('foo');",            correct: true}
+            - {value: '$request->query->get(''foo'');', correct: true}
+            - {value: '$request->attributes->get(''foo'');', correct: false}
+            - {value: '$request->request->get(''foo'');', correct: false}
+            - {value: '$request->get(''foo'');', correct: true}
     -
-        question: 'How to access the `bar` POST parameter from Request object $request ?'
+        question: 'How do you access a POST parameter named `bar` from the `Request` object?'
         answers:
-            - {value: "$request->query->get('bar');",     correct: false}
-            - {value: "$request->request->get('bar');",   correct: true}
-            - {value: "{$request->query->all()}['baz'];", correct: false}
-            - {value: "$request->post('bar');",           correct: false}
+            - {value: '$request->request->get(''bar'');', correct: true}
+            - {value: '$request->query->get(''bar'');', correct: false}
+            - {value: '$request->get(''bar'');', correct: false}
+            - {value: '$request->post->get(''bar'');', correct: false}
     -
-        question: 'The method getLanguages() from Request object:'
+        question: 'What does the `getLanguages()` method on the `Request` object return?'
         answers:
-            - {value: 'return the value of the metadata lang',                   correct: false}
-            - {value: 'return an array of languages available in translations',  correct: false}
-            - {value: 'return an array of languages the client accepts',         correct: true}
-            - {value: 'does not exists',                                         correct: false}
+            - {value: 'An array of languages acceptable for the client, based on the `Accept-Language` header.', correct: true}
+            - {value: 'The default locale of the application.', correct: false}
+            - {value: 'A list of all available translations.', correct: false}
+            - {value: 'The language of the current user''s session.', correct: false}
     -
-        question: 'How to get the Content Type from Request ?'
+        question: 'How do you get the value of the `Content-Type` request header?'
         answers:
-            - {value: "$request->headers->get('content_type');", correct: true}
-            - {value: "$request->headers->get('content-type');", correct: true}
-            - {value: "$request->headers->get('Content-Type');", correct: true}
-            - {value: "$request->getContentType();",             correct: true}
+            - {value: '$request->headers->get(''Content-Type'');', correct: true}
+            - {value: '$request->getContentType();', correct: false}
+            - {value: '$request->getMimeType();', correct: false}
+            - {value: '$request->headers->get(''content_type'');', correct: true}
     -
-        question: 'How to check if a request has been sent using AJAX ?'
+        question: 'How do you check if a request was made via JavaScript''s `fetch` or `XMLHttpRequest`?'
         answers:
-            - {value: $request->isXmlHttpRequest();,                                   correct: true}
-            - {value: $request->isAJAX();,                                             correct: false}
-            - {value: "$this->headers->get('X-Requested-With') === 'XMLHttpRequest';", correct: true}
+            - {value: '$request->isXmlHttpRequest();', correct: true}
+            - {value: '$request->isAjax();', correct: false}
+            - {value: '$request->headers->get(''X-Requested-With'') === ''XMLHttpRequest'';', correct: true}
+            - {value: 'This cannot be reliably detected.', correct: false}
     -
-        question: 'Which Response subclasses are available?'
+        question: 'Which of these are valid `Response` subclasses in the HttpFoundation component?'
         answers:
-            - {value: JsonResponse,       correct: true}
-            - {value: StreamResponse,     correct: false}
-            - {value: BinaryFileResponse, correct: true}
-            - {value: XmlResponse,        correct: false}
+            - {value: 'JsonResponse', correct: true}
+            - {value: 'RedirectResponse', correct: true}
+            - {value: 'BinaryFileResponse', correct: true}
+            - {value: 'StreamedResponse', correct: true}
+            - {value: 'XmlResponse', correct: false}
     -
-        question: 'Which HTTP status code should for a resource that moved temporarily ?'
+        question: 'Which HTTP status code should be used for a resource that has been permanently moved?'
         answers:
-            - {value: 301, correct: false}
-            - {value: 302, correct: true}
-            - {value: 201, correct: false}
-            - {value: 204, correct: false}
+            - {value: '301', correct: true}
+            - {value: '302', correct: false}
+            - {value: '307', correct: false}
+            - {value: '308', correct: true}
     -
-        question: 'True or False ? Server returns an 403 HTTP status code when you are not allowed to access a resource'
+        question: 'True or False: A server returns a `403 Forbidden` status code when a client is not authenticated, and a `401 Unauthorized` when the client is authenticated but not allowed to access the resource.'
         answers:
-            - {value: "True",    correct: true}
-            - {value: "False",   correct: false}
+            - {value: 'False', correct: true}
+            - {value: 'True', correct: false}
     -
-        question: 'Which method exist in Symfony\Component\HttpFoundation\Request ?'
+        question: 'Which method on the `Request` object returns the request URI (e.g., `/foo/bar?baz=qux`)?'
         answers:
-            - {value: "getPathInfo",    correct: true}
-            - {value: "getMethod",   correct: true}
-            - {value: "getLanguages",   correct: true}
-            - {value: "getHeaders",   correct: false}
-            - {value: "getHttpHost",   correct: true}
-            - {value: "getUrl",   correct: false}
+            - {value: 'getRequestUri()', correct: true}
+            - {value: 'getPathInfo()', correct: false}
+            - {value: 'getUri()', correct: false}
+            - {value: 'getRealUri()', correct: false}
     -
-        question: 'How can you set status code of Symfony\Component\HttpFoundation\Response'
+        question: 'How can you set the status code of a `Response` object?'
         answers:
-            - {value: "By you pass the value as second parameter of new Response()",    correct: true}
-            - {value: "By using setStatusCode()",   correct: true}
-            - {value: "By using setCodeStatus()",   correct: false}
-            - {value: "By using setHttpCode()",   correct: false}
+            - {value: 'By passing it as the second argument to the `Response` constructor.', correct: true}
+            - {value: 'By calling the `setStatusCode()` method.', correct: true}
+            - {value: 'By setting the public `$statusCode` property.', correct: false}
+            - {value: 'By adding a `Status-Code` header.', correct: false}
     -
-        question: 'To override the 404 error template for HTML page, how should you name the template ?'
+        question: 'To create a custom error page for a `404 Not Found` error for HTML responses, what should you name the Twig template file?'
         answers:
-            - {value: "error404.html.twig",    correct: true}
-            - {value: "404.html.twig",   correct: false}
-            - {value: "twig.404.html.twig",   correct: false}
+            - {value: 'templates/bundles/TwigBundle/Exception/error404.html.twig', correct: true}
+            - {value: 'templates/exceptions/404.html.twig', correct: false}
+            - {value: 'templates/error404.html.twig', correct: false}
+            - {value: 'views/errors/404.html.twig', correct: false}
+    -
+        question: 'Which method on the `Request` object gives you the raw request body as a string?'
+        answers:
+            - {value: 'getContent()', correct: true}
+            - {value: 'getBody()', correct: false}
+            - {value: 'getRawBody()', correct: false}
+            - {value: 'It is not possible to get the raw body.', correct: false}

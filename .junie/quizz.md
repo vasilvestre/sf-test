@@ -18,6 +18,8 @@ This document provides guidelines for the Symfony 7.0 Quiz System, a tool design
 - **Question**: A single quiz item with a question text and multiple answer options
 - **Answer**: A possible response to a question, marked as correct or incorrect
 
+Questions can have multiple correct answers. When creating quiz questions, you can mark any number of answers as correct by setting `correct: true` for each correct answer.
+
 ### Components
 1. **Entity Classes**:
    - `Category`: Represents a quiz category
@@ -66,6 +68,18 @@ questions:
         correct: false
       - text: "@Link"
         correct: false
+  - text: "Which of the following are valid route requirements?"
+    answers:
+      - text: "id: \\d+"
+        correct: true
+      - text: "slug: [a-z0-9-]+"
+        correct: true
+      - text: "page: \\w+"
+        correct: true
+      - text: "sort: asc|desc"
+        correct: true
+      - text: "filter: {word}"
+        correct: false
 ```
 
 ### PHP Example
@@ -80,6 +94,16 @@ return [
                 ['text' => 'BaseController', 'correct' => false],
                 ['text' => 'SymfonyController', 'correct' => false],
                 ['text' => 'MainController', 'correct' => false],
+            ],
+        ],
+        [
+            'text' => 'Which of the following are valid controller return types in Symfony 7?',
+            'answers' => [
+                ['text' => 'Response', 'correct' => true],
+                ['text' => 'JsonResponse', 'correct' => true],
+                ['text' => 'RedirectResponse', 'correct' => true],
+                ['text' => 'StreamedResponse', 'correct' => true],
+                ['text' => 'ViewResponse', 'correct' => false],
             ],
         ],
     ],
