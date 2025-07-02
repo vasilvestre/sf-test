@@ -11,100 +11,149 @@
 {% endblock %}
 
 {% block body %}
-    <div class="result-container">
-        <h1>Quiz Results</h1>
+    <div class="text-center mb-4">
+        <h1 class="display-4">Quiz Results</h1>
+    </div>
 
-        <div class="result-card">
-            <div class="score">{{ score|number_format }}%</div>
+    <div class="card mb-4">
+        <div class="card-body text-center">
+            <h2 class="display-1 text-{{ score >= 70 ? 'success' : (score >= 50 ? 'warning' : 'danger') }}">
+                {{ score|number_format }}%
+            </h2>
 
-            <div class="score-details">
+            <p class="lead mb-3">
                 You answered {{ correctAnswers }} out of {{ totalQuestions }} questions correctly.
-            </div>
+            </p>
 
-            <div class="feedback">
+            <div class="alert alert-{{ score >= 90 ? 'success' : (score >= 70 ? 'info' : (score >= 50 ? 'warning' : 'danger')) }} mb-4">
                 {% if score >= 90 %}
-                    <p>Excellent! You have a great understanding of Symfony 7.0!</p>
+                    <p class="mb-0">Excellent! You have a great understanding of Symfony 7.0!</p>
                 {% elseif score >= 70 %}
-                    <p>Good job! You have a solid understanding of Symfony 7.0.</p>
+                    <p class="mb-0">Good job! You have a solid understanding of Symfony 7.0.</p>
                 {% elseif score >= 50 %}
-                    <p>Not bad! Keep learning to improve your Symfony 7.0 knowledge.</p>
+                    <p class="mb-0">Not bad! Keep learning to improve your Symfony 7.0 knowledge.</p>
                 {% else %}
-                    <p>Keep studying! Symfony 7.0 has a lot to offer.</p>
+                    <p class="mb-0">Keep studying! Symfony 7.0 has a lot to offer.</p>
                 {% endif %}
             </div>
 
             {% if questionsWithAnswers is defined and questionsWithAnswers|length > 0 %}
-                <div class="questions-review">
-                    <h3>Review Your Answers</h3>
-                    {% for question in questionsWithAnswers %}
-                        <div class="question-review">
-                            <div class="question-text">{{ question.text|nl2br }}</div>
-                            <div class="answers-list">
-                                {% for answer in question.answers %}
-                                    <div class="answer-item {% if answer.id in question.selectedAnswers %}selected{% endif %} {% if answer.isCorrect %}correct{% endif %}">
-                                        <span class="answer-marker">
-                                            {% if answer.id in question.selectedAnswers and answer.isCorrect %}
-                                                <span class="correct-mark">✓</span>
-                                            {% elseif answer.id in question.selectedAnswers and not answer.isCorrect %}
-                                                <span class="incorrect-mark">✗</span>
-                                            {% elseif not (answer.id in question.selectedAnswers) and answer.isCorrect %}
-                                                <span class="missed-mark">•</span>
-                                            {% endif %}
-                                        </span>
-                                        <span class="answer-text">{{ answer.text }}</span>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="mb-0">Review Your Answers</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="accordion" id="answersAccordion">
+                            {% for question in questionsWithAnswers %}
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading{{ loop.index }}">
+                                        <button class="accordion-button {{ loop.first ? '' : 'collapsed' }}" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}"
+                                                aria-expanded="{{ loop.first ? 'true' : 'false' }}" aria-controls="collapse{{ loop.index }}">
+                                            Question {{ loop.index }}
+                                        </button>
+                                    </h2>
+                                    <div id="collapse{{ loop.index }}" class="accordion-collapse collapse {{ loop.first ? 'show' : '' }}"
+                                         aria-labelledby="heading{{ loop.index }}" data-bs-parent="#answersAccordion">
+                                        <div class="accordion-body">
+                                            <p>{{ question.text|nl2br }}</p>
+                                            <div class="list-group mt-3">
+                                                {% for answer in question.answers %}
+                                                    <div class="list-group-item list-group-item-action
+                                                        {% if answer.id in question.selectedAnswers and answer.isCorrect %}
+                                                            list-group-item-success
+                                                        {% elseif answer.id in question.selectedAnswers and not answer.isCorrect %}
+                                                            list-group-item-danger
+                                                        {% elseif not (answer.id in question.selectedAnswers) and answer.isCorrect %}
+                                                            list-group-item-warning
+                                                        {% endif %}">
+                                                        <div class="d-flex w-100 justify-content-between align-items-center">
+                                                            <div>
+                                                                {{ answer.text }}
+                                                            </div>
+                                                            <div>
+                                                                {% if answer.id in question.selectedAnswers and answer.isCorrect %}
+                                                                    <span class="badge bg-success">✓ Correct</span>
+                                                                {% elseif answer.id in question.selectedAnswers and not answer.isCorrect %}
+                                                                    <span class="badge bg-danger">✗ Incorrect</span>
+                                                                {% elseif not (answer.id in question.selectedAnswers) and answer.isCorrect %}
+                                                                    <span class="badge bg-warning text-dark">Missed</span>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
                                     </div>
-                                {% endfor %}
-                            </div>
+                                </div>
+                            {% endfor %}
                         </div>
-                    {% endfor %}
+                    </div>
                 </div>
             {% endif %}
 
-            <div class="success-rates" style="margin: 20px 0; padding: 15px; background-color: #f0f8ff; border-radius: 5px; text-align: left;">
-                <h3 style="margin-bottom: 10px;">Success Rates</h3>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="mb-0">Success Rates</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% if categoryStats %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                        <h4 class="mb-0">{{ categoryStats.name }} Category</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <p><strong>Quizzes Taken:</strong> {{ categoryStats.totalQuizzes }}</p>
+                                        <p><strong>Average Success Rate:</strong> {{ categoryStats.successRate|number_format }}%</p>
+                                        <p><strong>Your Score:</strong> {{ score|number_format }}%</p>
+                                        <p><strong>Comparison:</strong>
+                                            {% if score > categoryStats.successRate %}
+                                                <span class="text-success">{{ (score - categoryStats.successRate)|number_format }}% above average</span>
+                                            {% elseif score < categoryStats.successRate %}
+                                                <span class="text-danger">{{ (categoryStats.successRate - score)|number_format }}% below average</span>
+                                            {% else %}
+                                                <span>Equal to average</span>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
 
-                <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-                    {% if categoryStats %}
-                        <div style="flex: 1; min-width: 200px;">
-                            <h4>{{ categoryStats.name }} Category</h4>
-                            <p><strong>Quizzes Taken:</strong> {{ categoryStats.totalQuizzes }}</p>
-                            <p><strong>Average Success Rate:</strong> {{ categoryStats.successRate|number_format }}%</p>
-                            <p><strong>Your Score:</strong> {{ score|number_format }}%</p>
-                            <p><strong>Comparison:</strong>
-                                {% if score > categoryStats.successRate %}
-                                    <span style="color: green;">{{ (score - categoryStats.successRate)|number_format }}% above average</span>
-                                {% elseif score < categoryStats.successRate %}
-                                    <span style="color: #e74c3c;">{{ (categoryStats.successRate - score)|number_format }}% below average</span>
-                                {% else %}
-                                    <span>Equal to average</span>
-                                {% endif %}
-                            </p>
+                        <div class="col-md-{{ categoryStats ? '6' : '12' }} mb-3">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h4 class="mb-0">Overall</h4>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Average Success Rate:</strong> {{ overallSuccessRate|number_format }}%</p>
+                                    <p><strong>Your Score:</strong> {{ score|number_format }}%</p>
+                                    <p><strong>Comparison:</strong>
+                                        {% if score > overallSuccessRate %}
+                                            <span class="text-success">{{ (score - overallSuccessRate)|number_format }}% above average</span>
+                                        {% elseif score < overallSuccessRate %}
+                                            <span class="text-danger">{{ (overallSuccessRate - score)|number_format }}% below average</span>
+                                        {% else %}
+                                            <span>Equal to average</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                    {% endif %}
-
-                    <div style="flex: 1; min-width: 200px;">
-                        <h4>Overall</h4>
-                        <p><strong>Average Success Rate:</strong> {{ overallSuccessRate|number_format }}%</p>
-                        <p><strong>Your Score:</strong> {{ score|number_format }}%</p>
-                        <p><strong>Comparison:</strong>
-                            {% if score > overallSuccessRate %}
-                                <span style="color: green;">{{ (score - overallSuccessRate)|number_format }}% above average</span>
-                            {% elseif score < overallSuccessRate %}
-                                <span style="color: #e74c3c;">{{ (overallSuccessRate - score)|number_format }}% below average</span>
-                            {% else %}
-                                <span>Equal to average</span>
-                            {% endif %}
-                        </p>
                     </div>
                 </div>
             </div>
 
             {% if chart is defined %}
-                <div data-controller="chart-toggle">
-                    <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 10px;">
+                <div class="card mb-4" data-controller="chart-toggle">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0">Your Performance Trend</h3>
                         <div>
-                            <label for="category-filter">Filter by Category: </label>
-                            <select id="category-filter" data-chart-toggle-target="categorySelect">
+                            <label for="category-filter" class="form-label me-2">Filter by Category:</label>
+                            <select id="category-filter" class="form-select form-select-sm d-inline-block w-auto" data-chart-toggle-target="categorySelect">
                                 <option value="all">All Categories</option>
                                 {% if categoryStats %}
                                     <option value="{{ quizResult.category.id }}" selected>{{ categoryStats.name }}</option>
@@ -117,17 +166,17 @@
                             </select>
                         </div>
                     </div>
-
-                    <div class="chart-container" data-chart-toggle-target="chart">
-                        <h3>Your Performance Trend</h3>
-                        {{ render_chart(chart, {'id': 'performance-chart'}) }}
+                    <div class="card-body" data-chart-toggle-target="chart">
+                        <div style="height: 300px;">
+                            {{ render_chart(chart, {'id': 'performance-chart'}) }}
+                        </div>
                     </div>
                 </div>
             {% endif %}
 
-            <div style="margin-top: 20px;">
-                <a href="{{ path('quiz_index') }}" class="btn-primary">Back to Home</a>
-                <a href="{{ path('quiz_all') }}" class="btn-success">Try Another Quiz</a>
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <a href="{{ path('quiz_index') }}" class="btn btn-primary">Back to Home</a>
+                <a href="{{ path('quiz_all') }}" class="btn btn-success">Try Another Quiz</a>
             </div>
         </div>
     </div>

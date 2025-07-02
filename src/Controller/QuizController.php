@@ -316,11 +316,11 @@ class QuizController extends AbstractController
             'datasets' => [
                 [
                     'label' => 'Quiz Score (%)',
-                    'backgroundColor' => 'rgba(52, 152, 219, 0.1)',
-                    'borderColor' => '#3498db',
+                    'backgroundColor' => 'rgba(255, 99, 132, .4)',
+                    'borderColor' => 'rgb(255, 99, 132)',
                     'data' => $scores,
                     'fill' => true,
-                    'tension' => 0.1,
+                    'tension' => 0.4,
                     'borderWidth' => 2,
                 ],
             ],
@@ -328,7 +328,7 @@ class QuizController extends AbstractController
 
         // Set chart options
         $chart->setOptions([
-            'responsive' => true,
+            'maintainAspectRatio' => false,
             'scales' => [
                 'y' => [
                     'beginAtZero' => true,

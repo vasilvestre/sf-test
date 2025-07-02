@@ -11,103 +11,131 @@
 {% endblock %}
 
 {% block body %}
-    <div class="quiz-container">
-        <div class="header">
-            <h1>Symfony 7.0 Quiz System</h1>
-            <p>Test your knowledge of Symfony 7.0 with these quizzes</p>
-            <div class="button-group">
-                <a href="{{ path('quiz_all') }}" class="btn-success">Take Quiz with All Categories</a>
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-4">Symfony 7.0 Quiz System</h1>
+            <p class="lead">Test your knowledge of Symfony 7.0 with these quizzes</p>
+            <div class="d-flex justify-content-center gap-2 mt-3">
+                <a href="{{ path('quiz_all') }}" class="btn btn-success">Take Quiz with All Categories</a>
                 {% if mostFailedQuestions|length > 0 %}
-                    <a href="{{ path('quiz_failed_questions') }}" class="btn-warning">Practice Failed Questions</a>
+                    <a href="{{ path('quiz_failed_questions') }}" class="btn btn-warning">Practice Failed Questions</a>
                 {% endif %}
             </div>
         </div>
+    </div>
 
-        {% if totalQuizzesTaken > 0 %}
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-label">Quizzes Taken</div>
-                    <div class="stat-value">{{ totalQuizzesTaken }}</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Success Rate</div>
-                    <div class="stat-value">{{ averageSuccessRate|number_format }}%</div>
-                </div>
-            </div>
-
-            <div data-controller="chart-toggle">
-                <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 10px;">
-                    <div>
-                        <label for="category-filter">Filter by Category: </label>
-                        <select id="category-filter" data-chart-toggle-target="categorySelect">
-                            <option value="all">All Categories</option>
-                            {% for category in categories %}
-                                <option value="{{ category.id }}">{{ category.name }}</option>
-                            {% endfor %}
-                        </select>
+    {% if totalQuizzesTaken > 0 %}
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card text-center mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Quizzes Taken</h5>
+                        <p class="card-text display-6">{{ totalQuizzesTaken }}</p>
                     </div>
                 </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card text-center mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Success Rate</h5>
+                        <p class="card-text display-6">{{ averageSuccessRate|number_format }}%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                <div class="chart-container" data-chart-toggle-target="chart">
-                    <h3>Performance Trend</h3>
+        <div class="card mb-4" data-controller="chart-toggle">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Performance Trend</h5>
+                <div>
+                    <label for="category-filter" class="form-label me-2">Filter by Category:</label>
+                    <select id="category-filter" class="form-select form-select-sm d-inline-block w-auto" data-chart-toggle-target="categorySelect">
+                        <option value="all">All Categories</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="card-body" data-chart-toggle-target="chart">
+                <div style="height: 300px;">
                     {{ render_chart(chart, {'id': 'index-performance-chart'}) }}
                 </div>
             </div>
+        </div>
 
-            {% if mostFailedQuestions|length > 0 %}
-                <div class="most-failed-questions">
-                    <h3>Questions You Struggle With ({{ totalFailedQuestions }})</h3>
-                    <div class="failed-questions-list">
+        {% if mostFailedQuestions|length > 0 %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Questions You Struggle With ({{ totalFailedQuestions }})</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
                         {% for questionFailure in mostFailedQuestions %}
-                            <div class="failed-question-item">
-                                <div class="question-text">{{ questionFailure.question.text }}</div>
-                                <div class="category-badge">{{ questionFailure.question.category.name }}</div>
-                                <div class="failure-count">Failed {{ questionFailure.failureCount }} times</div>
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ questionFailure.question.text }}</h6>
+                                    <span class="badge bg-primary">{{ questionFailure.question.category.name }}</span>
+                                </div>
+                                <small class="text-muted">Failed {{ questionFailure.failureCount }} times</small>
                             </div>
                         {% endfor %}
                     </div>
                 </div>
-            {% endif %}
-
-            {% if mostFailedCategories|length > 0 %}
-                <div class="most-failed-categories">
-                    <h3>Categories You Struggle With</h3>
-                    <div class="failed-categories-list">
-                        {% for categoryFailure in mostFailedCategories %}
-                            <div class="failed-category-item">
-                                <div class="category-name">{{ categoryFailure.category.name }}</div>
-                                <div class="failure-count">Failed {{ categoryFailure.failureCount }} times</div>
-                                <a href="{{ path('quiz_category', {'id': categoryFailure.category.id}) }}" class="btn-primary btn-small">Practice Now</a>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endif %}
+            </div>
         {% endif %}
 
-        <h2>Select a Category</h2>
+        {% if mostFailedCategories|length > 0 %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Categories You Struggle With</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for categoryFailure in mostFailedCategories %}
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">{{ categoryFailure.category.name }}</h6>
+                                    <small class="text-muted">Failed {{ categoryFailure.failureCount }} times</small>
+                                </div>
+                                <a href="{{ path('quiz_category', {'id': categoryFailure.category.id}) }}" class="btn btn-primary btn-sm">Practice Now</a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
 
-        {% if categories|length > 0 %}
+    <h2 class="mb-3">Select a Category</h2>
+
+    {% if categories|length > 0 %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for category in categories %}
-                <div class="category-card">
-                    <h3 class="category-title">{{ category.name }}</h3>
-                    {% if category.description %}
-                        <p class="category-description">{{ category.description }}</p>
-                    {% endif %}
-                    <p>Questions: {{ category.questions|length }}</p>
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ category.name }}</h5>
+                            {% if category.description %}
+                                <p class="card-text">{{ category.description }}</p>
+                            {% endif %}
+                            <p class="card-text"><small class="text-muted">Questions: {{ category.questions|length }}</small></p>
 
-                    {% if categoryStats[category.id].totalQuizzes > 0 %}
-                        <div style="margin-bottom: 15px;">
-                            <p><strong>Quizzes Taken:</strong> {{ categoryStats[category.id].totalQuizzes }}</p>
-                            <p><strong>Success Rate:</strong> {{ categoryStats[category.id].successRate|number_format }}%</p>
+                            {% if categoryStats[category.id].totalQuizzes > 0 %}
+                                <div class="mb-3">
+                                    <p class="card-text mb-1"><small><strong>Quizzes Taken:</strong> {{ categoryStats[category.id].totalQuizzes }}</small></p>
+                                    <p class="card-text mb-0"><small><strong>Success Rate:</strong> {{ categoryStats[category.id].successRate|number_format }}%</small></p>
+                                </div>
+                            {% endif %}
                         </div>
-                    {% endif %}
-
-                    <a href="{{ path('quiz_category', {'id': category.id}) }}" class="btn-primary">Start Quiz</a>
+                        <div class="card-footer bg-transparent border-top-0 text-end">
+                            <a href="{{ path('quiz_category', {'id': category.id}) }}" class="btn btn-primary">Start Quiz</a>
+                        </div>
+                    </div>
                 </div>
             {% endfor %}
-        {% else %}
-            <p>No quiz categories available. Please check the configuration files.</p>
-        {% endif %}
-    </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info">No quiz categories available. Please check the configuration files.</div>
+    {% endif %}
 {% endblock %}

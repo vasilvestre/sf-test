@@ -15,11 +15,13 @@
 {% endblock %}
 
 {% block body %}
-    <div class="quiz-container">
-        <a href="{{ path('quiz_index') }}" class="back-link">← Back to Categories</a>
+    <div class="mb-4">
+        <a href="{{ path('quiz_index') }}" class="btn btn-outline-secondary mb-3">
+            <i class="bi bi-arrow-left"></i> Back to Categories
+        </a>
 
-        <div class="header">
-            <h1>
+        <div class="text-center mb-4">
+            <h1 class="display-5">
                 {% if title is defined %}
                     {{ title }}
                 {% elseif singleCategory %}
@@ -28,7 +30,7 @@
                     Symfony 7.0 Quiz - All Categories
                 {% endif %}
             </h1>
-            <p>
+            <p class="lead">
                 {% if isFailedQuestionsQuiz is defined and isFailedQuestionsQuiz %}
                     Practice the questions you've struggled with in the past
                 {% else %}
@@ -37,33 +39,49 @@
             </p>
 
             {% if isFailedQuestionsQuiz is defined and isFailedQuestionsQuiz and totalFailedQuestions is defined %}
-                <div class="stats-container">
-                    <div class="stat-card">
-                        <div class="stat-label">Total Failed Questions</div>
-                        <div class="stat-value">{{ totalFailedQuestions }}</div>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card text-center mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Failed Questions</h5>
+                                <p class="card-text display-6">{{ totalFailedQuestions }}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Total Failures</div>
-                        <div class="stat-value">{{ totalFailureCount }}</div>
+                    <div class="col-md-6">
+                        <div class="card text-center mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Failures</h5>
+                                <p class="card-text display-6">{{ totalFailureCount }}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 {% if topFailedQuestions is defined and topFailedQuestions|length > 0 %}
-                    <div class="most-failed-questions">
-                        <h3>Questions You Struggle With The Most</h3>
-                        <div class="failed-questions-list">
-                            {% for item in topFailedQuestions %}
-                                <div class="failed-question-item">
-                                    <div class="question-text">{{ item.question.text }}</div>
-                                    <div class="category-badge">{{ item.question.category.name }}</div>
-                                    <div class="failure-count">Failed {{ item.failureCount }} times</div>
-                                </div>
-                            {% endfor %}
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Questions You Struggle With The Most</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group">
+                                {% for item in topFailedQuestions %}
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1">{{ item.question.text }}</h6>
+                                            <span class="badge bg-primary">{{ item.question.category.name }}</span>
+                                        </div>
+                                        <small class="text-muted">Failed {{ item.failureCount }} times</small>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 {% endif %}
             {% endif %}
-            <p class="quiz-instructions"><strong>Note:</strong> Some questions may have multiple correct answers. Select all that apply.</p>
+            <div class="alert alert-info">
+                <strong>Note:</strong> Some questions may have multiple correct answers. Select all that apply.
+            </div>
         </div>
 
         {% if questions|length > 0 %}
@@ -74,27 +92,41 @@
                 {% if isFailedQuestionsQuiz is defined and isFailedQuestionsQuiz %}
                     <input type="hidden" name="is_failed_questions_quiz" value="1">
                 {% endif %}
-                {% for question in questions %}
-                    <div class="question-card">
-                        {% if not singleCategory %}
-                            <div class="category-label">{{ question.category.name }}</div>
-                        {% endif %}
-                        <div class="question-text">{{ question.text|nl2br }}</div>
 
-                        {% for answer in question.answers %}
-                            <div class="answer-option">
-                                <input type="checkbox" id="answer-{{ question.id }}-{{ answer.id }}"
-                                       name="answers[{{ question.id }}][]" value="{{ answer.id }}">
-                                <label for="answer-{{ question.id }}-{{ answer.id }}">{{ answer.text }}</label>
+                {% for question in questions %}
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            {% if not singleCategory %}
+                                <span class="badge bg-primary float-end">{{ question.category.name }}</span>
+                            {% endif %}
+                            <h5 class="mb-0">Question {{ loop.index }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text mb-4">{{ question.text|nl2br }}</p>
+
+                            <div class="list-group">
+                                {% for answer in question.answers %}
+                                    <div class="list-group-item">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="answer-{{ question.id }}-{{ answer.id }}"
+                                                name="answers[{{ question.id }}][]" value="{{ answer.id }}">
+                                            <label class="form-check-label" for="answer-{{ question.id }}-{{ answer.id }}">
+                                                {{ answer.text }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                {% endfor %}
                             </div>
-                        {% endfor %}
+                        </div>
                     </div>
                 {% endfor %}
 
-                <button type="submit" class="btn-submit">Submit Answers</button>
+                <div class="d-grid gap-2 col-md-6 mx-auto">
+                    <button type="submit" class="btn btn-primary btn-lg">Submit Answers</button>
+                </div>
             </form>
         {% else %}
-            <p>No questions available for this quiz.</p>
+            <div class="alert alert-warning">No questions available for this quiz.</div>
         {% endif %}
     </div>
 {% endblock %}

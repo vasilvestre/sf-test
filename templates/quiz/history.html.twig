@@ -11,54 +11,75 @@
 {% endblock %}
 
 {% block body %}
-    <div class="history-container">
-        <a href="{{ path('quiz_index') }}" class="back-link">← Back to Categories</a>
+    <div class="mb-4">
+        <a href="{{ path('quiz_index') }}" class="btn btn-outline-secondary mb-3">
+            <i class="bi bi-arrow-left"></i> Back to Categories
+        </a>
 
-        <div class="header">
-            <h1>
+        <div class="text-center mb-4">
+            <h1 class="display-5">
                 {% if category is defined and category %}
                     {{ category.name }} Quiz History
                 {% else %}
                     All Quizzes History
                 {% endif %}
             </h1>
-            <p>View your quiz performance over time</p>
+            <p class="lead">View your quiz performance over time</p>
         </div>
 
-        <div class="chart-container">
-            {{ render_chart(chart) }}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Performance Trend</h5>
+            </div>
+            <div class="card-body">
+                <div style="height: 300px;">
+                    {{ render_chart(chart) }}
+                </div>
+            </div>
         </div>
 
-        <h2>Recent Results</h2>
-        {% if results|length > 0 %}
-            <table class="results-table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Category</th>
-                        <th>Score</th>
-                        <th>Correct / Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for result in results %}
-                        <tr>
-                            <td>{{ result.createdAt|date('Y-m-d H:i') }}</td>
-                            <td>
-                                {% if result.category %}
-                                    {{ result.category.name }}
-                                {% else %}
-                                    Multiple Categories
-                                {% endif %}
-                            </td>
-                            <td>{{ result.score|number_format }}%</td>
-                            <td>{{ result.correctAnswers }} / {{ result.totalQuestions }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No quiz results found.</p>
-        {% endif %}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Results</h5>
+            </div>
+            <div class="card-body">
+                {% if results|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Category</th>
+                                    <th>Score</th>
+                                    <th>Correct / Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for result in results %}
+                                    <tr>
+                                        <td>{{ result.createdAt|date('Y-m-d H:i') }}</td>
+                                        <td>
+                                            {% if result.category %}
+                                                {{ result.category.name }}
+                                            {% else %}
+                                                Multiple Categories
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{{ result.score >= 70 ? 'success' : (result.score >= 50 ? 'warning' : 'danger') }}">
+                                                {{ result.score|number_format }}%
+                                            </span>
+                                        </td>
+                                        <td>{{ result.correctAnswers }} / {{ result.totalQuestions }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mb-0">No quiz results found.</div>
+                {% endif %}
+            </div>
+        </div>
     </div>
 {% endblock %}
