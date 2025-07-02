@@ -20,6 +20,9 @@
                 {% if mostFailedQuestions|length > 0 %}
                     <a href="{{ path('quiz_failed_questions') }}" class="btn btn-warning">Practice Failed Questions</a>
                 {% endif %}
+                {% if totalQuizzesTaken > 0 %}
+                    <a href="{{ path('quiz_history') }}" class="btn btn-info">View Quiz History</a>
+                {% endif %}
             </div>
         </div>
     </div>

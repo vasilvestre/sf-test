@@ -11,8 +11,20 @@
 {% endblock %}
 
 {% block body %}
-    <div class="text-center mb-4">
-        <h1 class="display-4">Quiz Results</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        {% if isHistoryDetail is defined and isHistoryDetail %}
+            <a href="{{ path('quiz_history') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to History
+            </a>
+        {% endif %}
+        <h1 class="display-4 m-0 mx-auto">
+            {% if isHistoryDetail is defined and isHistoryDetail %}
+                Quiz History Details
+            {% else %}
+                Quiz Results
+            {% endif %}
+        </h1>
+        <div style="width: 135px;"></div> <!-- Spacer to center the heading -->
     </div>
 
     <div class="card mb-4">
@@ -43,47 +55,40 @@
                         <h3 class="mb-0">Review Your Answers</h3>
                     </div>
                     <div class="card-body">
-                        <div class="accordion" id="answersAccordion">
+                        <div class="questions-list">
                             {% for question in questionsWithAnswers %}
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="heading{{ loop.index }}">
-                                        <button class="accordion-button {{ loop.first ? '' : 'collapsed' }}" type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}"
-                                                aria-expanded="{{ loop.first ? 'true' : 'false' }}" aria-controls="collapse{{ loop.index }}">
-                                            Question {{ loop.index }}
-                                        </button>
-                                    </h2>
-                                    <div id="collapse{{ loop.index }}" class="accordion-collapse collapse {{ loop.first ? 'show' : '' }}"
-                                         aria-labelledby="heading{{ loop.index }}" data-bs-parent="#answersAccordion">
-                                        <div class="accordion-body">
-                                            <p>{{ question.text|nl2br }}</p>
-                                            <div class="list-group mt-3">
-                                                {% for answer in question.answers %}
-                                                    <div class="list-group-item list-group-item-action
-                                                        {% if answer.id in question.selectedAnswers and answer.isCorrect %}
-                                                            list-group-item-success
-                                                        {% elseif answer.id in question.selectedAnswers and not answer.isCorrect %}
-                                                            list-group-item-danger
-                                                        {% elseif not (answer.id in question.selectedAnswers) and answer.isCorrect %}
-                                                            list-group-item-warning
-                                                        {% endif %}">
-                                                        <div class="d-flex w-100 justify-content-between align-items-center">
-                                                            <div>
-                                                                {{ answer.text }}
-                                                            </div>
-                                                            <div>
-                                                                {% if answer.id in question.selectedAnswers and answer.isCorrect %}
-                                                                    <span class="badge bg-success">✓ Correct</span>
-                                                                {% elseif answer.id in question.selectedAnswers and not answer.isCorrect %}
-                                                                    <span class="badge bg-danger">✗ Incorrect</span>
-                                                                {% elseif not (answer.id in question.selectedAnswers) and answer.isCorrect %}
-                                                                    <span class="badge bg-warning text-dark">Missed</span>
-                                                                {% endif %}
-                                                            </div>
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h4 class="mb-0">Question {{ loop.index }}</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>{{ question.text|nl2br }}</p>
+                                        <div class="list-group mt-3">
+                                            {% for answer in question.answers %}
+                                                <div class="list-group-item list-group-item-action
+                                                    {% if answer.id in question.selectedAnswers and answer.isCorrect %}
+                                                        list-group-item-success
+                                                    {% elseif answer.id in question.selectedAnswers and not answer.isCorrect %}
+                                                        list-group-item-danger
+                                                    {% elseif not (answer.id in question.selectedAnswers) and answer.isCorrect %}
+                                                        list-group-item-warning
+                                                    {% endif %}">
+                                                    <div class="d-flex w-100 justify-content-between align-items-center">
+                                                        <div>
+                                                            {{ answer.text }}
+                                                        </div>
+                                                        <div>
+                                                            {% if answer.id in question.selectedAnswers and answer.isCorrect %}
+                                                                <span class="badge bg-success">✓ Correct</span>
+                                                            {% elseif answer.id in question.selectedAnswers and not answer.isCorrect %}
+                                                                <span class="badge bg-danger">✗ Incorrect</span>
+                                                            {% elseif not (answer.id in question.selectedAnswers) and answer.isCorrect %}
+                                                                <span class="badge bg-warning text-dark">Missed</span>
+                                                            {% endif %}
                                                         </div>
                                                     </div>
-                                                {% endfor %}
-                                            </div>
+                                                </div>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
@@ -175,8 +180,15 @@
             {% endif %}
 
             <div class="d-flex justify-content-center gap-3 mt-4">
-                <a href="{{ path('quiz_index') }}" class="btn btn-primary">Back to Home</a>
-                <a href="{{ path('quiz_all') }}" class="btn btn-success">Try Another Quiz</a>
+                {% if isHistoryDetail is defined and isHistoryDetail %}
+                    <a href="{{ path('quiz_history') }}" class="btn btn-primary">Back to History</a>
+                    <a href="{{ path('quiz_index') }}" class="btn btn-secondary">Back to Home</a>
+                    <a href="{{ path('quiz_all') }}" class="btn btn-success">Take New Quiz</a>
+                {% else %}
+                    <a href="{{ path('quiz_index') }}" class="btn btn-primary">Back to Home</a>
+                    <a href="{{ path('quiz_all') }}" class="btn btn-success">Try Another Quiz</a>
+                    <a href="{{ path('quiz_history') }}" class="btn btn-info">View Quiz History</a>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -29,6 +29,9 @@ class QuizResult
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $questionsData = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -95,6 +98,18 @@ class QuizResult
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getQuestionsData(): ?array
+    {
+        return $this->questionsData;
+    }
+
+    public function setQuestionsData(?array $questionsData): static
+    {
+        $this->questionsData = $questionsData;
 
         return $this;
     }

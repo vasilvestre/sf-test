@@ -22,6 +22,8 @@ use Symfony\UX\Chartjs\Model\Chart;
 #[Route('/quiz')]
 class QuizController extends AbstractController
 {
+    private const QUESTION_PER_QUIZ = 15;
+
     public function __construct(
         #[Autowire(service: QuizLoader::class)] private readonly QuizLoader                         $quizLoader,
         #[Autowire(service: CategoryRepository::class)] private readonly CategoryRepository         $categoryRepository,
@@ -112,8 +114,7 @@ class QuizController extends AbstractController
         // Randomize the order of questions
         shuffle($allQuestions);
 
-        // Limit to a maximum of 15 questions
-        $allQuestions = array_slice($allQuestions, 0, 15);
+        $allQuestions = array_slice($allQuestions, 0, self::QUESTION_PER_QUIZ);
 
         return $this->render('quiz/quiz.html.twig', [
             'categories' => $categories,
@@ -195,11 +196,37 @@ class QuizController extends AbstractController
 
         $score = $totalQuestions > 0 ? ($correctAnswers / $totalQuestions) * 100 : 0;
 
+        // Get questions and correct answers for display and storage
+        $questionsWithAnswers = [];
+        foreach ($answers as $questionId => $selectedAnswerIds) {
+            $question = $this->questionRepository->find($questionId);
+            if (!$question) {
+                continue;
+            }
+
+            $questionData = [
+                'text' => $question->getText(),
+                'answers' => [],
+                'selectedAnswers' => $selectedAnswerIds
+            ];
+
+            foreach ($question->getAnswers() as $answer) {
+                $questionData['answers'][] = [
+                    'id' => $answer->getId(),
+                    'text' => $answer->getText(),
+                    'isCorrect' => $answer->isIsCorrect()
+                ];
+            }
+
+            $questionsWithAnswers[] = $questionData;
+        }
+
         // Save the quiz result
         $quizResult = new QuizResult();
         $quizResult->setScore($score);
         $quizResult->setCorrectAnswers($correctAnswers);
         $quizResult->setTotalQuestions($totalQuestions);
+        $quizResult->setQuestionsData($questionsWithAnswers);
 
         // Set category if it's a single category quiz
         $category = null;
@@ -231,63 +258,8 @@ class QuizController extends AbstractController
 
         $this->entityManager->flush();
 
-        // Get recent results for the chart
-        $chartData = $this->quizResultRepository->getChartData($categoryId);
-
-        // Create chart using Symfony UX Chart.js
-        $chart = $this->createChart($chartData);
-
-        // Get statistics
-        $categoryStats = null;
-        $overallSuccessRate = $this->quizResultRepository->getAverageSuccessRate();
-
-        if ($category) {
-            $categoryStats = [
-                'totalQuizzes' => $this->quizResultRepository->getTotalQuizzesTaken($category->getId()),
-                'successRate' => $this->quizResultRepository->getAverageSuccessRate($category->getId()),
-                'name' => $category->getName()
-            ];
-        }
-
-        // Get all categories for the filter dropdown
-        $categories = $this->categoryRepository->findAll();
-
-        // Get questions and correct answers for display
-        $questionsWithAnswers = [];
-        foreach ($answers as $questionId => $selectedAnswerIds) {
-            $question = $this->questionRepository->find($questionId);
-            if (!$question) {
-                continue;
-            }
-
-            $questionData = [
-                'text' => $question->getText(),
-                'answers' => [],
-                'selectedAnswers' => $selectedAnswerIds
-            ];
-
-            foreach ($question->getAnswers() as $answer) {
-                $questionData['answers'][] = [
-                    'id' => $answer->getId(),
-                    'text' => $answer->getText(),
-                    'isCorrect' => $answer->isIsCorrect()
-                ];
-            }
-
-            $questionsWithAnswers[] = $questionData;
-        }
-
-        return $this->render('quiz/result.html.twig', [
-            'score' => $score,
-            'correctAnswers' => $correctAnswers,
-            'totalQuestions' => $totalQuestions,
-            'chart' => $chart,
-            'quizResult' => $quizResult,
-            'categoryStats' => $categoryStats,
-            'overallSuccessRate' => $overallSuccessRate,
-            'categories' => $categories,
-            'questionsWithAnswers' => $questionsWithAnswers,
-        ]);
+        // Redirect to the history detail page for this quiz result
+        return $this->redirectToRoute('quiz_history_detail', ['id' => $quizResult->getId()]);
     }
 
 
@@ -395,6 +367,63 @@ class QuizController extends AbstractController
             'singleCategory' => false,
             'isFailedQuestionsQuiz' => true,
             'title' => 'Failed Questions Quiz'
+        ]);
+    }
+
+    #[Route('/history', name: 'quiz_history')]
+    public function history(): Response
+    {
+        // Get all quiz results ordered by date (newest first)
+        $quizResults = $this->quizResultRepository->findAllOrderedByDate();
+
+        // Get categories for filter dropdown
+        $categories = $this->categoryRepository->findAll();
+
+        // Create chart for overall performance
+        $chartData = $this->quizResultRepository->getChartData();
+        $chart = $this->createChart($chartData);
+
+        return $this->render('quiz/history.html.twig', [
+            'quizResults' => $quizResults,
+            'categories' => $categories,
+            'chart' => $chart,
+            'totalQuizzesTaken' => count($quizResults),
+            'averageSuccessRate' => $this->quizResultRepository->getAverageSuccessRate(),
+        ]);
+    }
+
+    #[Route('/history/{id}', name: 'quiz_history_detail')]
+    public function historyDetail(QuizResult $quizResult): Response
+    {
+        // Get the questions and answers data for this quiz result
+        $questionsWithAnswers = $quizResult->getQuestionsData();
+
+        // Get categories for filter dropdown
+        $categories = $this->categoryRepository->findAll();
+
+        // Get category stats if available
+        $categoryStats = null;
+        if ($quizResult->getCategory()) {
+            $categoryStats = [
+                'totalQuizzes' => $this->quizResultRepository->getTotalQuizzesTaken($quizResult->getCategory()->getId()),
+                'successRate' => $this->quizResultRepository->getAverageSuccessRate($quizResult->getCategory()->getId()),
+                'name' => $quizResult->getCategory()->getName()
+            ];
+        }
+
+        // Get overall success rate
+        $overallSuccessRate = $this->quizResultRepository->getAverageSuccessRate();
+
+        return $this->render('quiz/result.html.twig', [
+            'score' => $quizResult->getScore(),
+            'correctAnswers' => $quizResult->getCorrectAnswers(),
+            'totalQuestions' => $quizResult->getTotalQuestions(),
+            'quizResult' => $quizResult,
+            'categoryStats' => $categoryStats,
+            'overallSuccessRate' => $overallSuccessRate,
+            'categories' => $categories,
+            'questionsWithAnswers' => $questionsWithAnswers,
+            'isHistoryDetail' => true,
         ]);
     }
 }
