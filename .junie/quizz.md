@@ -8,7 +8,9 @@ This document provides guidelines for the Symfony 7.0 Quiz System, a tool design
 - Run tests for a single category or all categories at once
 - Display statistics on the main page (quizzes taken, success rate)
 - Show performance trend chart on the main page
-- Track failed questions for learning purposes (future feature)
+- Track failed questions and categories for learning purposes
+- Take a quiz composed of only failed questions
+- View most failed questions and categories on the main page
 
 ## Architecture
 
@@ -17,6 +19,9 @@ This document provides guidelines for the Symfony 7.0 Quiz System, a tool design
 - **Quiz**: A collection of questions from one or more categories
 - **Question**: A single quiz item with a question text and multiple answer options
 - **Answer**: A possible response to a question, marked as correct or incorrect
+- **QuizResult**: Stores quiz results including score and date
+- **QuestionFailure**: Tracks how many times a specific question has been failed
+- **CategoryFailure**: Tracks how many times a specific category has been failed
 
 Questions can have multiple correct answers. When creating quiz questions, you can mark any number of answers as correct by setting `correct: true` for each correct answer.
 
@@ -26,6 +31,8 @@ Questions can have multiple correct answers. When creating quiz questions, you c
    - `Question`: Represents a quiz question with multiple answers
    - `Answer`: Represents a possible answer to a question
    - `QuizResult`: Stores quiz results including score and date
+   - `QuestionFailure`: Tracks question failures
+   - `CategoryFailure`: Tracks category failures
 
 2. **Configuration Files**:
    - YAML files containing quiz questions, answers, and categories
@@ -46,6 +53,11 @@ Questions can have multiple correct answers. When creating quiz questions, you c
 2. Select a specific category or choose "All Categories"
 3. Answer the questions presented
 4. Submit your answers to see your results
+
+### Failed Questions Quiz
+1.  After failing some questions, a "Failed Questions" quiz option will be available.
+2.  This quiz will only contain questions that you have previously answered incorrectly.
+3.  Answering a question correctly in this mode will decrease its failure count.
 
 ### Adding New Questions
 1. Create or edit a configuration file in the `config/quizzes/` directory
@@ -146,5 +158,3 @@ The application may use other Symfony UX packages in the future, such as:
 - Symfony UX Turbo: For creating reactive applications without writing JavaScript
 - Symfony UX Dropzone: For file uploads with drag and drop
 - Symfony UX Notify: For browser notifications
-
-For a complete list of available packages, visit the [Symfony UX website](https://ux.symfony.com/).

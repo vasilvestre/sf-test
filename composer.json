@@ -1,5 +1,6 @@
 {
     "type": "project",
+    "description": "A quiz application built with Symfony 7.0 to test and improve knowledge of the Symfony framework. Features include dynamic quiz loading from YAML files, detailed statistics, performance tracking, and a special mode for practicing failed questions.",
     "license": "proprietary",
     "minimum-stability": "stable",
     "prefer-stable": true,

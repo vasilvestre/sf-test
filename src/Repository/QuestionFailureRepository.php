@@ -37,9 +37,11 @@ class QuestionFailureRepository extends ServiceEntityRepository
     public function findMostFailedQuestions(int $limit = 10, ?Category $category = null): array
     {
         $queryBuilder = $this->createQueryBuilder('qf')
-            ->select('qf, q')
+            ->select('qf, q, c')
             ->join('qf.question', 'q')
-            ->orderBy('qf.failureCount', 'DESC')
+            ->join('q.category', 'c')
+            ->orderBy('c.name', 'ASC')
+            ->addOrderBy('qf.failureCount', 'DESC')
             ->setMaxResults($limit);
 
         if ($category) {
@@ -65,5 +67,21 @@ class QuestionFailureRepository extends ServiceEntityRepository
         }
 
         return (int)$queryBuilder->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Get all failed questions
+     */
+    public function findAllFailedQuestions(): array
+    {
+        return $this->createQueryBuilder('qf')
+            ->select('qf, q, c, a')
+            ->join('qf.question', 'q')
+            ->join('q.category', 'c')
+            ->join('q.answers', 'a')
+            ->where('qf.failureCount > 0')
+            ->orderBy('qf.failureCount', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 }

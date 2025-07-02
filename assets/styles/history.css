@@ -1,9 +1,4 @@
 /* History page styles */
-.history-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
 .results-table {
     width: 100%;
     border-collapse: collapse;
@@ -19,17 +14,4 @@
 }
 .results-table tr:nth-child(even) {
     background-color: #f9f9f9;
-}
-.back-link {
-    display: inline-block;
-    margin-bottom: 20px;
-    color: #3498db;
-    text-decoration: none;
-}
-.back-link:hover {
-    text-decoration: underline;
-}
-.header {
-    text-align: center;
-    margin-bottom: 30px;
 }

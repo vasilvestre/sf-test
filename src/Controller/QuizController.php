@@ -65,6 +65,9 @@ class QuizController extends AbstractController
         // Get the most failed questions
         $mostFailedQuestions = $this->questionFailureRepository->findMostFailedQuestions(5);
 
+        // Get the total count of failed questions
+        $totalFailedQuestions = count($this->questionFailureRepository->findAllFailedQuestions());
+
         // Get the most failed categories
         $mostFailedCategories = $this->categoryFailureRepository->findMostFailedCategories(5);
 
@@ -75,6 +78,7 @@ class QuizController extends AbstractController
             'chart' => $chart,
             'categoryStats' => $categoryStats,
             'mostFailedQuestions' => $mostFailedQuestions,
+            'totalFailedQuestions' => $totalFailedQuestions,
             'mostFailedCategories' => $mostFailedCategories,
         ]);
     }
@@ -123,6 +127,7 @@ class QuizController extends AbstractController
     {
         $answers = $request->request->all('answers');
         $categoryId = $request->request->get('category_id');
+        $isFailedQuestionsQuiz = $request->request->has('is_failed_questions_quiz');
         $correctAnswers = 0;
         $totalQuestions = count($answers);
 
@@ -364,6 +369,32 @@ class QuizController extends AbstractController
         return $this->json([
             'chart' => $chart->getOptions(),
             'data' => $chart->getData(),
+        ]);
+    }
+
+    #[Route('/failed-questions', name: 'quiz_failed_questions')]
+    public function failedQuestions(): Response
+    {
+        // Get all failed questions
+        $questionFailures = $this->questionFailureRepository->findAllFailedQuestions();
+
+        // Extract questions from question failures
+        $questions = [];
+        foreach ($questionFailures as $questionFailure) {
+            $questions[] = $questionFailure->getQuestion();
+        }
+
+        // If no failed questions, redirect to index with a message
+        if (empty($questions)) {
+            $this->addFlash('info', 'You have no failed questions yet. Take some quizzes first!');
+            return $this->redirectToRoute('quiz_index');
+        }
+
+        return $this->render('quiz/quiz.html.twig', [
+            'questions' => $questions,
+            'singleCategory' => false,
+            'isFailedQuestionsQuiz' => true,
+            'title' => 'Failed Questions Quiz'
         ]);
     }
 }

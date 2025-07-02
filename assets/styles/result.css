@@ -1,17 +1,4 @@
 /* Result page styles */
-.result-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-}
-.result-card {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 30px;
-    margin-bottom: 20px;
-    background-color: #f9f9f9;
-}
 .score {
     font-size: 3rem;
     font-weight: bold;
@@ -21,23 +8,6 @@
 .score-details {
     font-size: 1.2rem;
     margin-bottom: 20px;
-}
-.btn-primary {
-    background-color: #3498db;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 4px;
-    text-decoration: none;
-    display: inline-block;
-    margin-right: 10px;
-}
-.btn-success {
-    background-color: #2ecc71;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 4px;
-    text-decoration: none;
-    display: inline-block;
 }
 .feedback {
     margin: 20px 0;

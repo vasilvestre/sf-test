@@ -101,7 +101,7 @@ php -S localhost:8000 -t public/
   - `env`: An environment variable to inject
 
 ### Quiz Configuration
-The application supports defining quizzes in both YAML and PHP formats:
+The application supports defining quizzes in YAML format. The `QuizLoader` service is designed to be flexible and can handle multiple variations in the YAML structure.
 
 ```yaml
 category_name: "Category Name"
@@ -115,7 +115,12 @@ questions:
         correct: false
 ```
 
-Place quiz configuration files in the `config/quizzes/` directory with `.yaml` extension.
+Place quiz configuration files in the `config/quizzes/` directory with `.yaml` or `.yml` extension.
+
+The `QuizLoader` can also handle the following variations:
+- `category` as an alias for `category_name`
+- `question` as an alias for `text` in the question fields
+- `value` as an alias for `text` in the answer fields
 
 ## Architecture
 
@@ -123,29 +128,32 @@ Place quiz configuration files in the `config/quizzes/` directory with `.yaml` e
 - **Category**: Represents a quiz category with a name and description
 - **Question**: Belongs to a category and has text, difficulty level, and multiple answers
 - **Answer**: Belongs to a question and has text and a boolean indicating if it's correct
+- **QuizResult**: Stores the result of a quiz taken by a user
+- **QuestionFailure**: Tracks the number of times a user has failed a specific question
+- **CategoryFailure**: Tracks the number of times a user has failed a specific category
 
 ### Services
 - **QuizLoader**: Loads quiz data from configuration files and persists it to the database
 
 ### Controllers
 - **HomeController**: Redirects to the quiz index
-- **QuizController**: Handles quiz-related actions (listing, displaying, submitting)
+- **QuizController**: Handles quiz-related actions (listing, displaying, submitting, statistics, and failed questions)
 
 ## Additional Development Information
 
 ### Code Style
 - Follow Symfony best practices
 - Use Attributes for configuration instead of YAML/PHP files
-- Use dependency injection for services
+- Use dependency injection for services, preferably with the `#[Autowire]` attribute for clarity.
 - Use type hints for method parameters and return types
 - Use Symfony UX if a plugin is available instead of including JavaScript libraries directly
 
 ### Quiz Loading
-The `QuizLoader` service loads quizzes from configuration files in the `config/quizzes/` directory. It supports both YAML and PHP formats. Quizzes are loaded on first access to the application.
+The `QuizLoader` service loads quizzes from configuration files in the `config/quizzes/` directory. It supports YAML format. Quizzes are loaded on first access to the application.
 
 ### Adding New Quizzes
 To add a new quiz:
-1. Create a new file in `config/quizzes/` with `.yaml` or `.php` extension
+1. Create a new file in `config/quizzes/` with `.yaml` or `.yml` extension
 2. Define the quiz structure as shown in the examples above
 3. Access the application to trigger the quiz loading process
 

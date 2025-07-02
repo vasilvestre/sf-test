@@ -1,6 +1,6 @@
 # Symfony Quiz Application
 
-This repository contains a Symfony-based quiz application that allows users to take quizzes on various topics.
+This is a quiz application built with Symfony 7.0. It allows users to test their knowledge of Symfony through a series of quizzes.
 
 ## Requirements
 
@@ -69,10 +69,28 @@ When making changes to assets (JavaScript, CSS), you need to recompile them:
 php bin/console asset-map:compile
 ```
 
-### Running Tests
+### Running Tests (no tests actually)
 
 ```bash
 php bin/phpunit
+```
+
+## Adding Quizzes
+
+Quizzes are defined in YAML files located in the `config/quizzes/` directory. To add a new quiz, create a new YAML file in this directory. The application will automatically load the new quiz.
+
+### Example Quiz File
+
+```yaml
+category_name: "Routing"
+category_description: "Questions about the Symfony routing system"
+questions:
+  - text: "Which annotation is used to define a route in a controller?"
+    answers:
+      - text: "@Route"
+        correct: true
+      - text: "@Path"
+        correct: false
 ```
 
 ## Project Structure

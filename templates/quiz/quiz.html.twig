@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% if singleCategory %}
+    {% if title is defined %}
+        {{ title }}
+    {% elseif singleCategory %}
         {{ category.name }} Quiz
     {% else %}
         All Categories Quiz
@@ -18,13 +20,49 @@
 
         <div class="header">
             <h1>
-                {% if singleCategory %}
+                {% if title is defined %}
+                    {{ title }}
+                {% elseif singleCategory %}
                     {{ category.name }} Quiz
                 {% else %}
                     Symfony 7.0 Quiz - All Categories
                 {% endif %}
             </h1>
-            <p>Answer the following questions to test your knowledge</p>
+            <p>
+                {% if isFailedQuestionsQuiz is defined and isFailedQuestionsQuiz %}
+                    Practice the questions you've struggled with in the past
+                {% else %}
+                    Answer the following questions to test your knowledge
+                {% endif %}
+            </p>
+
+            {% if isFailedQuestionsQuiz is defined and isFailedQuestionsQuiz and totalFailedQuestions is defined %}
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Failed Questions</div>
+                        <div class="stat-value">{{ totalFailedQuestions }}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Failures</div>
+                        <div class="stat-value">{{ totalFailureCount }}</div>
+                    </div>
+                </div>
+
+                {% if topFailedQuestions is defined and topFailedQuestions|length > 0 %}
+                    <div class="most-failed-questions">
+                        <h3>Questions You Struggle With The Most</h3>
+                        <div class="failed-questions-list">
+                            {% for item in topFailedQuestions %}
+                                <div class="failed-question-item">
+                                    <div class="question-text">{{ item.question.text }}</div>
+                                    <div class="category-badge">{{ item.question.category.name }}</div>
+                                    <div class="failure-count">Failed {{ item.failureCount }} times</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
             <p class="quiz-instructions"><strong>Note:</strong> Some questions may have multiple correct answers. Select all that apply.</p>
         </div>
 
@@ -32,6 +70,9 @@
             <form action="{{ path('quiz_submit') }}" method="post" data-turbo="false">
                 {% if singleCategory %}
                     <input type="hidden" name="category_id" value="{{ category.id }}">
+                {% endif %}
+                {% if isFailedQuestionsQuiz is defined and isFailedQuestionsQuiz %}
+                    <input type="hidden" name="is_failed_questions_quiz" value="1">
                 {% endif %}
                 {% for question in questions %}
                     <div class="question-card">

@@ -15,7 +15,12 @@
         <div class="header">
             <h1>Symfony 7.0 Quiz System</h1>
             <p>Test your knowledge of Symfony 7.0 with these quizzes</p>
-            <a href="{{ path('quiz_all') }}" class="btn-success">Take Quiz with All Categories</a>
+            <div class="button-group">
+                <a href="{{ path('quiz_all') }}" class="btn-success">Take Quiz with All Categories</a>
+                {% if mostFailedQuestions|length > 0 %}
+                    <a href="{{ path('quiz_failed_questions') }}" class="btn-warning">Practice Failed Questions</a>
+                {% endif %}
+            </div>
         </div>
 
         {% if totalQuizzesTaken > 0 %}
@@ -51,13 +56,13 @@
 
             {% if mostFailedQuestions|length > 0 %}
                 <div class="most-failed-questions">
-                    <h3>Questions You Struggle With</h3>
+                    <h3>Questions You Struggle With ({{ totalFailedQuestions }})</h3>
                     <div class="failed-questions-list">
                         {% for questionFailure in mostFailedQuestions %}
                             <div class="failed-question-item">
                                 <div class="question-text">{{ questionFailure.question.text }}</div>
-                                <div class="failure-count">Failed {{ questionFailure.failureCount }} times</div>
                                 <div class="category-badge">{{ questionFailure.question.category.name }}</div>
+                                <div class="failure-count">Failed {{ questionFailure.failureCount }} times</div>
                             </div>
                         {% endfor %}
                     </div>
