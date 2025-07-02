@@ -25,9 +25,6 @@ class Question
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Answer::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $answers;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $difficulty = null;
-
     public function __construct()
     {
         $this->answers = new ArrayCollection();
@@ -92,15 +89,4 @@ class Question
         return $this;
     }
 
-    public function getDifficulty(): ?int
-    {
-        return $this->difficulty;
-    }
-
-    public function setDifficulty(?int $difficulty): static
-    {
-        $this->difficulty = $difficulty;
-
-        return $this;
-    }
 }

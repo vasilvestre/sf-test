@@ -77,7 +77,7 @@ php bin/phpunit
 
 ## Project Structure
 
-- `config/quizzes/`: Contains quiz configuration files in YAML or PHP format
+- `config/quizzes/`: Contains quiz configuration files in YAML format
 - `src/Controller/`: Contains application controllers
 - `src/Entity/`: Contains Doctrine entities
 - `src/Service/`: Contains application services

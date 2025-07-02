@@ -103,13 +103,11 @@ php -S localhost:8000 -t public/
 ### Quiz Configuration
 The application supports defining quizzes in both YAML and PHP formats:
 
-#### YAML Format (preferred)
 ```yaml
 category_name: "Category Name"
 category_description: "Category Description"
 questions:
   - text: "Question text"
-    difficulty: 1
     answers:
       - text: "Answer 1"
         correct: true
@@ -117,25 +115,7 @@ questions:
         correct: false
 ```
 
-#### PHP Format
-```php
-return [
-    'category_name' => 'Category Name',
-    'category_description' => 'Category Description',
-    'questions' => [
-        [
-            'text' => 'Question text',
-            'difficulty' => 1,
-            'answers' => [
-                ['text' => 'Answer 1', 'correct' => true],
-                ['text' => 'Answer 2', 'correct' => false],
-            ],
-        ],
-    ],
-];
-```
-
-Place quiz configuration files in the `config/quizzes/` directory with `.yaml` or `.php` extension.
+Place quiz configuration files in the `config/quizzes/` directory with `.yaml` extension.
 
 ## Architecture
 

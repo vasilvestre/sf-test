@@ -4,3 +4,62 @@ body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
 }
+
+/* Chart container styles - consolidated from multiple files */
+.chart-container {
+    margin: 30px auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    max-width: 800px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Styles for the most failed categories section */
+.most-failed-categories {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.most-failed-categories h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.4rem;
+}
+
+.failed-categories-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.failed-category-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.category-name {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+.failure-count {
+    color: #e74c3c;
+    font-size: 0.9rem;
+}
+
+.btn-small {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+}

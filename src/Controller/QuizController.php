@@ -7,6 +7,7 @@ use App\Entity\QuizResult;
 use App\Repository\CategoryRepository;
 use App\Repository\QuestionRepository;
 use App\Repository\QuestionFailureRepository;
+use App\Repository\CategoryFailureRepository;
 use App\Repository\QuizResultRepository;
 use App\Service\QuizLoader;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,6 +29,7 @@ class QuizController extends AbstractController
         #[Autowire(service: EntityManagerInterface::class)] private readonly EntityManagerInterface $entityManager,
         #[Autowire(service: QuizResultRepository::class)] private readonly QuizResultRepository     $quizResultRepository,
         #[Autowire(service: QuestionFailureRepository::class)] private readonly QuestionFailureRepository $questionFailureRepository,
+        #[Autowire(service: CategoryFailureRepository::class)] private readonly CategoryFailureRepository $categoryFailureRepository,
         private readonly ChartBuilderInterface                                                      $chartBuilder
     ) {
     }
@@ -63,6 +65,9 @@ class QuizController extends AbstractController
         // Get the most failed questions
         $mostFailedQuestions = $this->questionFailureRepository->findMostFailedQuestions(5);
 
+        // Get the most failed categories
+        $mostFailedCategories = $this->categoryFailureRepository->findMostFailedCategories(5);
+
         return $this->render('quiz/index.html.twig', [
             'categories' => $categories,
             'totalQuizzesTaken' => $totalQuizzesTaken,
@@ -70,6 +75,7 @@ class QuizController extends AbstractController
             'chart' => $chart,
             'categoryStats' => $categoryStats,
             'mostFailedQuestions' => $mostFailedQuestions,
+            'mostFailedCategories' => $mostFailedCategories,
         ]);
     }
 
@@ -101,6 +107,9 @@ class QuizController extends AbstractController
 
         // Randomize the order of questions
         shuffle($allQuestions);
+
+        // Limit to a maximum of 15 questions
+        $allQuestions = array_slice($allQuestions, 0, 15);
 
         return $this->render('quiz/quiz.html.twig', [
             'categories' => $categories,
@@ -197,6 +206,24 @@ class QuizController extends AbstractController
         }
 
         $this->entityManager->persist($quizResult);
+
+        // Track category failures if score is below 60%
+        if ($category && $score < 60) {
+            $categoryFailure = $this->categoryFailureRepository->findByCategory($category);
+
+            if (!$categoryFailure) {
+                // Create a new record if it doesn't exist
+                $categoryFailure = new \App\Entity\CategoryFailure();
+                $categoryFailure->setCategory($category);
+                $categoryFailure->setFailureCount(1);
+            } else {
+                // Increment the failure count
+                $categoryFailure->incrementFailureCount();
+            }
+
+            $this->entityManager->persist($categoryFailure);
+        }
+
         $this->entityManager->flush();
 
         // Get recent results for the chart

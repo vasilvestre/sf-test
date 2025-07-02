@@ -63,6 +63,21 @@
                     </div>
                 </div>
             {% endif %}
+
+            {% if mostFailedCategories|length > 0 %}
+                <div class="most-failed-categories">
+                    <h3>Categories You Struggle With</h3>
+                    <div class="failed-categories-list">
+                        {% for categoryFailure in mostFailedCategories %}
+                            <div class="failed-category-item">
+                                <div class="category-name">{{ categoryFailure.category.name }}</div>
+                                <div class="failure-count">Failed {{ categoryFailure.failureCount }} times</div>
+                                <a href="{{ path('quiz_category', {'id': categoryFailure.category.id}) }}" class="btn-primary btn-small">Practice Now</a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
         {% endif %}
 
         <h2>Select a Category</h2>

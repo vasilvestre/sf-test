@@ -1,0 +1,7 @@
+workers:
+    asset-watch:
+        cmd: ['symfony', 'console', 'asset-map:compile']
+        watch: ['assets', 'src', 'vendor']
+    delete-old-assets:
+        cmd: ['rm', '--rf', 'public/assets']
+        watch: ['public/assets']

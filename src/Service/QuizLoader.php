@@ -34,7 +34,7 @@ class QuizLoader
         }
 
         $finder = new Finder();
-        $finder->files()->in($this->quizzesDir)->name(['*.yaml', '*.yml', '*.php']);
+        $finder->files()->in($this->quizzesDir)->name(['*.yaml', '*.yml']);
 
         foreach ($finder as $file) {
             $this->loadQuizFromFile($file->getRealPath());
@@ -46,13 +46,7 @@ class QuizLoader
      */
     private function loadQuizFromFile(string $filePath): void
     {
-        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-
-        if ($extension === 'php') {
-            $quizData = require $filePath;
-        } else {
-            $quizData = Yaml::parseFile($filePath);
-        }
+        $quizData = Yaml::parseFile($filePath);
 
         if (!isset($quizData['category_name'])) {
             $quizData['category_name'] = $quizData['category'];
@@ -120,10 +114,6 @@ class QuizLoader
             $question = new Question();
             $question->setText($questionData['text']);
             $question->setCategory($category);
-
-            if (isset($questionData['difficulty'])) {
-                $question->setDifficulty((int) $questionData['difficulty']);
-            }
 
             $this->entityManager->persist($question);
 

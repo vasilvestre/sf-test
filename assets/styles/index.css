@@ -63,13 +63,6 @@
     font-size: 1.2rem;
     color: #666;
 }
-.chart-container {
-    margin-bottom: 30px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 20px;
-    background-color: #f9f9f9;
-}
 
 /* Most failed questions styles */
 .most-failed-questions {
