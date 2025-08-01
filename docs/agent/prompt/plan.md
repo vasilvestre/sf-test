@@ -1,0 +1,1 @@
+Use @docs/agent/prompt/spec/plan.md

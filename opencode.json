@@ -1,0 +1,74 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "context7": {
+      "type": "local",
+      "command": ["npx", "-y", "@upstash/context7-mcp"],
+      "enabled": true
+    }
+  },
+
+  "mode": {
+    "build": {
+      "model": "github-copilot/claude-sonnet-4",
+      "prompt": "docs/agent/prompt/build.md"
+    },
+
+    "plan": {
+      "model": "github-copilot/gemini-2.5-pro",
+      "prompt": "docs/agent/prompt/spec/plan.md",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false
+      }
+    },
+
+    "spec:plan": {
+      "model": "github-copilot/gemini-2.5-pro",
+      "prompt": "docs/agent/prompt/spec/plan.md"
+    },
+    "spec:requirements": {
+      "model": "github-copilot/claude-sonnet-4",
+      "prompt": "docs/agent/prompt/spec/status.md"
+    },
+    "spec:design": {
+      "model": "github-copilot/gemini-2.5-pro",
+      "prompt": "docs/agent/prompt/spec/design.md"
+    },
+    "spec:tasks": {
+      "model": "github-copilot/gemini-2.5-pro",
+      "prompt": "docs/agent/prompt/spec/tasks.md"
+    },
+    "spec:execute": {
+      "model": "github-copilot/claude-sonnet-4",
+      "prompt": "docs/agent/prompt/spec/execute.md"
+    },
+    "spec:advanced": {
+      "model": "github-copilot/gemini-2.5-pro",
+      "prompt": "docs/agent/prompt/spec/advanced.md"
+    },
+    "spec:list": {
+      "model": "github-copilot/claude-3.7-sonnet-thought",
+      "prompt": "docs/agent/prompt/spec/list.md"
+    },
+    "spec:status": {
+      "model": "github-copilot/claude-3.7-sonnet-thought",
+      "prompt": "docs/agent/prompt/spec/status.md"
+    },
+    "spec:help": {
+      "model": "github-copilot/claude-3.7-sonnet",
+      "prompt": "docs/agent/prompt/spec/help.md"
+    },
+    
+    
+    "tools:qa": {
+      "model": "github-copilot/claude-sonnet-4",
+      "prompt": "docs/agent/qa.md"
+    },
+    "tools:understand": {
+      "model": "github-copilot/claude-sonnet-4",
+      "prompt": "docs/agent/understand.md"
+    }
+  }
+}
