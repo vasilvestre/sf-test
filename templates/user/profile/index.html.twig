@@ -1,0 +1,140 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Profile - Quiz App{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        {% if user.profile.avatar.hasAvatar %}
+                            <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="rounded-circle" width="100" height="100">
+                        {% else %}
+                            <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 100px; height: 100px;">
+                                <i class="fas fa-user fa-3x text-white"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <h5 class="text-center">{{ user.profile.fullName }}</h5>
+                    <p class="text-center text-muted">@{{ user.username.value }}</p>
+                    
+                    <div class="list-group list-group-flush">
+                        <a href="{{ path('profile_index') }}" class="list-group-item list-group-item-action active">
+                            <i class="fas fa-user me-2"></i>Profile
+                        </a>
+                        <a href="{{ path('profile_edit') }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-edit me-2"></i>Edit Profile
+                        </a>
+                        <a href="{{ path('profile_preferences') }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-cog me-2"></i>Preferences
+                        </a>
+                        <a href="{{ path('profile_change_password') }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-lock me-2"></i>Change Password
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Profile Information</h4>
+                </div>
+                <div class="card-body">
+                    {% if not user.emailVerified %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Your email is not verified. Please check your inbox for a verification link.
+                        </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Personal Information</h6>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Name:</strong></td>
+                                    <td>{{ user.profile.fullName }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Email:</strong></td>
+                                    <td>
+                                        {{ user.email.value }}
+                                        {% if user.emailVerified %}
+                                            <span class="badge bg-success ms-2">Verified</span>
+                                        {% else %}
+                                            <span class="badge bg-warning ms-2">Unverified</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Username:</strong></td>
+                                    <td>{{ user.username.value }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Role:</strong></td>
+                                    <td>
+                                        <span class="badge bg-primary">{{ user.role.value|replace({'ROLE_': ''})|title }}</span>
+                                    </td>
+                                </tr>
+                                {% if user.profile.dateOfBirth %}
+                                <tr>
+                                    <td><strong>Age:</strong></td>
+                                    <td>{{ user.profile.age }} years old</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                    <td><strong>Joined:</strong></td>
+                                    <td>{{ user.createdAt|date('F j, Y') }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h6>Preferences</h6>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Difficulty:</strong></td>
+                                    <td>{{ user.preferences.preferredDifficulty.value|title }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Theme:</strong></td>
+                                    <td>{{ user.preferences.theme|title }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Language:</strong></td>
+                                    <td>{{ user.preferences.language|upper }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Questions/Session:</strong></td>
+                                    <td>{{ user.preferences.questionsPerSession }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Notifications:</strong></td>
+                                    <td>
+                                        {% if user.preferences.notificationsEnabled %}
+                                            <span class="badge bg-success">Enabled</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Disabled</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    {% if user.profile.bio %}
+                        <div class="mt-4">
+                            <h6>Biography</h6>
+                            <p>{{ user.profile.bio|nl2br }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

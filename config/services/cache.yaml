@@ -1,0 +1,129 @@
+# Cache Services Configuration for Quiz Application
+# Comprehensive Redis caching services with dependency injection
+
+services:
+    # Cache Metrics Collector
+    App\Shared\Infrastructure\Cache\CacheMetricsCollector:
+        arguments:
+            $logger: '@monolog.logger.cache'
+
+    # Quiz Cache Service
+    App\Shared\Infrastructure\Cache\QuizCacheService:
+        arguments:
+            $sessionCache: '@quiz.sessions'
+            $questionCache: '@quiz.questions'
+            $tagAwareCache: '@cache.app'
+            $metricsCollector: '@App\Shared\Infrastructure\Cache\CacheMetricsCollector'
+            $logger: '@monolog.logger.cache'
+
+    # Analytics Cache Service - Temporarily disabled
+    # App\Shared\Infrastructure\Cache\AnalyticsCacheService:
+    #     arguments:
+    #         $userAnalyticsCache: '@analytics.user'
+    #         $leaderboardCache: '@analytics.leaderboard'
+    #         $realtimeCache: '@analytics.realtime'
+    #         $tagAwareCache: '@cache.app'
+    #         $metricsCollector: '@App\Shared\Infrastructure\Cache\CacheMetricsCollector'
+    #         $logger: '@monolog.logger.cache'
+
+    # User Cache Service
+    App\Shared\Infrastructure\Cache\UserCacheService:
+        arguments:
+            $userCache: '@quiz.sessions'  # Reuse session cache for user data
+            $sessionCache: '@quiz.sessions'
+            $tagAwareCache: '@cache.app'
+            $metricsCollector: '@App\Shared\Infrastructure\Cache\CacheMetricsCollector'
+            $logger: '@monolog.logger.cache'
+
+    # Leaderboard Cache Service
+    App\Shared\Infrastructure\Cache\LeaderboardCacheService:
+        arguments:
+            $leaderboardCache: '@analytics.leaderboard'
+            $realtimeCache: '@analytics.realtime'
+            $tagAwareCache: '@cache.app'
+            $metricsCollector: '@App\Shared\Infrastructure\Cache\CacheMetricsCollector'
+            $logger: '@monolog.logger.cache'
+
+    # Cache Warmup Service
+    App\Shared\Infrastructure\Cache\CacheWarmupService:
+        arguments:
+            $quizCacheService: '@App\Shared\Infrastructure\Cache\QuizCacheService'
+            $userCacheService: '@App\Shared\Infrastructure\Cache\UserCacheService'
+            $leaderboardCacheService: '@App\Shared\Infrastructure\Cache\LeaderboardCacheService'
+            $logger: '@monolog.logger.cache'
+
+    # Cache Monitoring Service
+    App\Shared\Infrastructure\Cache\CacheMonitoringService:
+        arguments:
+            $metricsCollector: '@App\Shared\Infrastructure\Cache\CacheMetricsCollector'
+            $connectionFactory: '@App\Shared\Infrastructure\Cache\RedisConnectionFactory'
+            $quizCacheService: '@App\Shared\Infrastructure\Cache\QuizCacheService'
+            $userCacheService: '@App\Shared\Infrastructure\Cache\UserCacheService'
+            $leaderboardCacheService: '@App\Shared\Infrastructure\Cache\LeaderboardCacheService'
+            $logger: '@monolog.logger.cache'
+
+    # Cache Invalidation Manager
+    App\Shared\Infrastructure\Cache\CacheInvalidationManager:
+        arguments:
+            $tagAwareCache: '@cache.app'
+            $quizCacheService: '@App\Shared\Infrastructure\Cache\QuizCacheService'
+            $userCacheService: '@App\Shared\Infrastructure\Cache\UserCacheService'
+            $leaderboardCacheService: '@App\Shared\Infrastructure\Cache\LeaderboardCacheService'
+            $cacheWarmupService: '@App\Shared\Infrastructure\Cache\CacheWarmupService'
+            $logger: '@monolog.logger.cache'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    # Console Commands
+    App\Command\Cache\CacheMonitorCommand:
+        arguments:
+            $monitoringService: '@App\Shared\Infrastructure\Cache\CacheMonitoringService'
+        tags:
+            - { name: console.command }
+
+    App\Command\Cache\CacheWarmupCommand:
+        arguments:
+            $warmupService: '@App\Shared\Infrastructure\Cache\CacheWarmupService'
+        tags:
+            - { name: console.command }
+
+    App\Command\Cache\CacheInvalidateCommand:
+        arguments:
+            $invalidationManager: '@App\Shared\Infrastructure\Cache\CacheInvalidationManager'
+        tags:
+            - { name: console.command }
+
+    # Alias services for easier injection
+    cache.quiz:
+        alias: App\Shared\Infrastructure\Cache\QuizCacheService
+        public: true
+
+    cache.analytics:
+        # alias: App\Shared\Infrastructure\Cache\AnalyticsCacheService
+        # public: true
+        # Temporarily use quiz cache instead
+        alias: App\Shared\Infrastructure\Cache\QuizCacheService
+        public: true
+
+    cache.user:
+        alias: App\Shared\Infrastructure\Cache\UserCacheService
+        public: true
+
+    cache.leaderboard:
+        alias: App\Shared\Infrastructure\Cache\LeaderboardCacheService
+        public: true
+
+    cache.monitoring:
+        alias: App\Shared\Infrastructure\Cache\CacheMonitoringService
+        public: true
+
+# Monolog configuration for cache logging
+monolog:
+    channels: ['cache']
+    handlers:
+        cache:
+            type: rotating_file
+            path: '%kernel.logs_dir%/cache.log'
+            level: info
+            max_files: 10
+            channels: ['cache']

@@ -1,0 +1,5 @@
+# User Domain Routes - Temporarily disabled
+# user_domain:
+#     resource: '../../src/User/UI/'
+#     type: attribute
+#     prefix: /user

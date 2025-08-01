@@ -1,0 +1,5 @@
+# Analytics Domain Routes - Temporarily disabled
+# analytics_domain:
+#     resource: '../../src/Analytics/UI/'
+#     type: attribute
+#     prefix: /analytics

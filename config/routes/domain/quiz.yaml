@@ -1,0 +1,11 @@
+# Quiz Domain Routes - Temporarily disabled
+# quiz_domain:
+#     resource: '../../src/Quiz/UI/'
+#     type: attribute
+#     prefix: /quiz
+
+# Legacy quiz routes for backward compatibility  
+quiz_legacy:
+    resource: '../../../src/Controller/QuizController.php'
+    type: attribute
+    prefix: /quiz

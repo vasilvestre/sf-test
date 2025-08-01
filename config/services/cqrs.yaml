@@ -1,0 +1,159 @@
+# CQRS Service Configuration
+
+services:
+    # Command Bus and Handlers
+    command.bus:
+        class: Symfony\Component\Messenger\MessageBus
+        arguments:
+            - !tagged_iterator { tag: 'cqrs.command_middleware' }
+
+    # Query Bus and Handlers  
+    query.bus:
+        class: Symfony\Component\Messenger\MessageBus
+        arguments:
+            - !tagged_iterator { tag: 'cqrs.query_middleware' }
+
+    # Event Bus and Handlers
+    event.bus:
+        class: Symfony\Component\Messenger\MessageBus
+        arguments:
+            - !tagged_iterator { tag: 'cqrs.event_middleware' }
+
+    # Middleware
+    App\Shared\Infrastructure\Messenger\Middleware\LoggingMiddleware:
+        tags: 
+            - { name: 'cqrs.command_middleware', priority: 100 }
+            - { name: 'cqrs.query_middleware', priority: 100 }
+            - { name: 'cqrs.event_middleware', priority: 100 }
+
+    App\Shared\Infrastructure\Messenger\Middleware\PerformanceMiddleware:
+        tags:
+            - { name: 'cqrs.command_middleware', priority: 90 }
+            - { name: 'cqrs.query_middleware', priority: 90 }
+
+    App\Shared\Infrastructure\Messenger\Middleware\TransactionMiddleware:
+        tags:
+            - { name: 'cqrs.command_middleware', priority: 80 }
+
+    App\Shared\Infrastructure\Messenger\Middleware\CacheMiddleware:
+        arguments:
+            - '@cache.cqrs_queries'
+        tags:
+            - { name: 'cqrs.query_middleware', priority: 80 }
+
+    App\Shared\Infrastructure\Messenger\Middleware\DomainEventMiddleware:
+        arguments:
+            - '@event.bus'
+            - '@doctrine.orm.entity_manager'
+        tags:
+            - { name: 'cqrs.command_middleware', priority: 70 }
+
+    # User Domain Command Handlers
+    App\User\Application\Handler\RegisterUserCommandHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'command.bus' }
+
+    App\User\Application\Handler\UpdateUserProfileCommandHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'command.bus' }
+
+    App\User\Application\Handler\UpdateUserPreferencesCommandHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'command.bus' }
+
+    App\User\Application\Handler\VerifyUserEmailCommandHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'command.bus' }
+
+    App\User\Application\Handler\EnableTwoFactorCommandHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'command.bus' }
+
+    App\User\Application\Handler\CreateStudyPlanCommandHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'command.bus' }
+
+    # User Domain Query Handlers
+    App\User\Application\Handler\GetUserByIdQueryHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'query.bus' }
+
+    App\User\Application\Handler\GetUserByEmailQueryHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'query.bus' }
+
+    App\User\Application\Handler\GetUsersQueryHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'query.bus' }
+
+    App\User\Application\Handler\GetUserProfileQueryHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'query.bus' }
+
+    App\User\Application\Handler\GetUserProgressQueryHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'query.bus' }
+
+    # Quiz Domain Command Handlers
+    App\Quiz\Application\Handler\CreateQuizCommandHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'command.bus' }
+
+    App\Quiz\Application\Handler\SubmitQuizAttemptCommandHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'command.bus' }
+
+    App\Quiz\Application\Handler\CreateQuestionCommandHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'command.bus' }
+
+    # Quiz Domain Query Handlers
+    App\Quiz\Application\Handler\GetCategoriesQueryHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'query.bus' }
+
+    App\Quiz\Application\Handler\GetQuizQuestionsQueryHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'query.bus' }
+
+    App\Quiz\Application\Handler\GetRecommendedQuestionsQueryHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'query.bus' }
+
+    # Shared Command Handlers
+    App\Shared\Application\Handler\SendEmailCommandHandler:
+        arguments:
+            - '@mailer'
+            - '@twig'
+            - '@logger'
+            - '%env(DEFAULT_FROM_EMAIL)%'
+        tags:
+            - { name: 'messenger.message_handler', bus: 'command.bus' }
+
+    # Event Handlers
+    App\User\Application\EventHandler\UserRegisteredHandler:
+        arguments:
+            - '@command.bus'
+            - '@logger'
+        tags:
+            - { name: 'messenger.message_handler', bus: 'event.bus' }
+
+    App\Quiz\Application\EventHandler\QuizAttemptCompletedHandler:
+        arguments:
+            - '@command.bus'
+            - '@logger'
+        tags:
+            - { name: 'messenger.message_handler', bus: 'event.bus' }
+
+    # CQRS Facade Services
+    App\Shared\Application\Service\CommandBus:
+        arguments:
+            - '@command.bus'
+
+    App\Shared\Application\Service\QueryBus:
+        arguments:
+            - '@query.bus'
+
+    App\Shared\Application\Service\EventBus:
+        arguments:
+            - '@event.bus'

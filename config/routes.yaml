@@ -1,3 +1,9 @@
+# Domain-specific routes
+domain_routes:
+    resource: routes/domain/
+    type: directory
+
+# Legacy controllers for backward compatibility
 controllers:
     resource:
         path: ../src/Controller/

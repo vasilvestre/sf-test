@@ -5,5 +5,28 @@ services:
         autowire: true
         autoconfigure: true
 
-    App\:
-        resource: '../src/'
+    # Legacy services for backward compatibility
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']
+
+    App\Entity\:
+        resource: '../src/Entity/'
+
+    App\Repository\:
+        resource: '../src/Repository/'
+
+    App\Service\:
+        resource: '../src/Service/'
+
+    App\Command\:
+        resource: '../src/Command/'
+        exclude: '../src/Command/{CqrsSetupCommand.php,CqrsStatusCommand.php,DatabaseMonitorCommand.php,TestSchemaCommand.php}'
+        tags: ['console.command']
+
+imports:
+    - { resource: services/shared.yaml }
+    - { resource: services/quiz.yaml }
+    - { resource: services/user.yaml }
+    # - { resource: services/cqrs.yaml }  # Temporarily disabled
+    - { resource: services/cache.yaml }

@@ -1,19 +1,142 @@
 framework:
     cache:
         # Unique name of your app: used to compute stable namespaces for cache keys.
-        #prefix_seed: your_vendor_name/app_name
+        app: cache.adapter.filesystem
+        
+        # CQRS Cache Pools
+        pools:
+            cache.cqrs_queries:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 3600 # 1 hour
+                
+            cache.user_data:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 1800 # 30 minutes
+                
+            cache.analytics:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 300 # 5 minutes for real-time analytics
+                
+            # Quiz-specific cache pools
+            cache.quiz_sessions:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 1800 # 30 minutes
+                
+            cache.quiz_questions:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 3600 # 1 hour
+                
+            cache.leaderboards:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 120 # 2 minutes
+                
+            cache.system_config:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 86400 # 24 hours
 
-        # The "app" cache stores to the filesystem by default.
-        # The data in this cache should persist between deploys.
-        # Other options include:
+when@prod:
+    framework:
+        cache:
+            # Use Redis in production with multiple databases
+            app: cache.adapter.redis
+            default_redis_provider: app.redis.default
+            pools:
+                cache.cqrs_queries:
+                    adapter: cache.adapter.redis_tag_aware
+                    provider: app.redis.queries
+                cache.user_data:
+                    adapter: cache.adapter.redis
+                    provider: app.redis.user_data
+                cache.analytics:
+                    adapter: cache.adapter.redis_tag_aware
+                    provider: app.redis.analytics
+                cache.quiz_sessions:
+                    adapter: cache.adapter.redis_tag_aware
+                    provider: app.redis.quiz_sessions
+                cache.quiz_questions:
+                    adapter: cache.adapter.redis
+                    provider: app.redis.quiz_questions
+                cache.leaderboards:
+                    adapter: cache.adapter.redis_tag_aware
+                    provider: app.redis.leaderboards
+                cache.system_config:
+                    adapter: cache.adapter.redis
+                    provider: app.redis.system_config
 
-        # Redis
-        #app: cache.adapter.redis
-        #default_redis_provider: redis://localhost
+services:
+    # Redis connection providers for different databases
+    app.redis.default:
+        class: \Redis
+        factory: ['Symfony\Component\Cache\Adapter\RedisAdapter', 'createConnection']
+        arguments:
+            - '%env(REDIS_URL)%/0'
+            - { timeout: 5, retry_interval: 1, tcp_keepalive: 30, persistent: 1 }
+            
+    app.redis.queries:
+        class: \Redis
+        factory: ['Symfony\Component\Cache\Adapter\RedisAdapter', 'createConnection']
+        arguments:
+            - '%env(REDIS_URL)%/1'
+            - { timeout: 5, retry_interval: 1, tcp_keepalive: 30, persistent: 1 }
+            
+    app.redis.user_data:
+        class: \Redis
+        factory: ['Symfony\Component\Cache\Adapter\RedisAdapter', 'createConnection']
+        arguments:
+            - '%env(REDIS_URL)%/2'
+            - { timeout: 5, retry_interval: 1, tcp_keepalive: 30, persistent: 1 }
+            
+    app.redis.analytics:
+        class: \Redis
+        factory: ['Symfony\Component\Cache\Adapter\RedisAdapter', 'createConnection']
+        arguments:
+            - '%env(REDIS_URL)%/3'
+            - { timeout: 5, retry_interval: 1, tcp_keepalive: 30, persistent: 1 }
+            
+    app.redis.quiz_sessions:
+        class: \Redis
+        factory: ['Symfony\Component\Cache\Adapter\RedisAdapter', 'createConnection']
+        arguments:
+            - '%env(REDIS_URL)%/4'
+            - { timeout: 5, retry_interval: 1, tcp_keepalive: 30, persistent: 1 }
+            
+    app.redis.quiz_questions:
+        class: \Redis
+        factory: ['Symfony\Component\Cache\Adapter\RedisAdapter', 'createConnection']
+        arguments:
+            - '%env(REDIS_URL)%/5'
+            - { timeout: 5, retry_interval: 1, tcp_keepalive: 30, persistent: 1 }
+            
+    app.redis.leaderboards:
+        class: \Redis
+        factory: ['Symfony\Component\Cache\Adapter\RedisAdapter', 'createConnection']
+        arguments:
+            - '%env(REDIS_URL)%/6'
+            - { timeout: 5, retry_interval: 1, tcp_keepalive: 30, persistent: 1 }
+            
+    app.redis.system_config:
+        class: \Redis
+        factory: ['Symfony\Component\Cache\Adapter\RedisAdapter', 'createConnection']
+        arguments:
+            - '%env(REDIS_URL)%/7'
+            - { timeout: 5, retry_interval: 1, tcp_keepalive: 30, persistent: 1 }
 
-        # APCu (not recommended with heavy random-write workloads as memory fragmentation can cause perf issues)
-        #app: cache.adapter.apcu
-
-        # Namespaced pools use the above "app" backend by default
-        #pools:
-            #my.dedicated.cache: null
+# when@test:
+#     framework:
+#         cache:
+#             app: cache.adapter.array
+#             pools:
+#                 cache.cqrs_queries:
+#                     adapter: cache.adapter.array
+#                 cache.user_data:
+#                     adapter: cache.adapter.array
+#                 cache.analytics:
+#                     adapter: cache.adapter.array
+#                 cache.quiz_sessions:
+#                     adapter: cache.adapter.array
+#                 cache.quiz_questions:
+#                     adapter: cache.adapter.array
+#                 cache.leaderboards:
+#                     adapter: cache.adapter.array
+#                 cache.system_config:
+#                     adapter: cache.adapter.array

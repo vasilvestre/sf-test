@@ -1,0 +1,22 @@
+# Analytics Domain Services Configuration
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # Analytics Domain Services
+    App\Analytics\Domain\:
+        resource: '../../src/Analytics/Domain/*'
+        exclude: '../../src/Analytics/Domain/{Entity,ValueObject,Event,Exception}'
+
+    # Analytics Application Services
+    App\Analytics\Application\:
+        resource: '../../src/Analytics/Application/*'
+
+    # Analytics Infrastructure Services
+    App\Analytics\Infrastructure\:
+        resource: '../../src/Analytics/Infrastructure/*'
+
+    # Analytics UI Services
+    App\Analytics\UI\:
+        resource: '../../src/Analytics/UI/*'

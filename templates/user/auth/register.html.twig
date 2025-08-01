@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register - Quiz App{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Register</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="inputEmail" class="form-label">Email</label>
+                            <input type="email" name="email" id="inputEmail" class="form-control" required autofocus>
+                            <div class="form-text">We'll send you a verification email.</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="inputUsername" class="form-label">Username</label>
+                            <input type="text" name="username" id="inputUsername" class="form-control" required>
+                            <div class="form-text">3-30 characters, letters, numbers, underscores and hyphens only.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="inputPassword" class="form-label">Password</label>
+                            <input type="password" name="password" id="inputPassword" class="form-control" required>
+                            <div class="form-text">
+                                Password must contain:
+                                <ul class="mb-0">
+                                    <li>At least 8 characters</li>
+                                    <li>One uppercase letter</li>
+                                    <li>One lowercase letter</li>
+                                    <li>One number</li>
+                                    <li>One special character</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="inputRole" class="form-label">Role</label>
+                            <select name="role" id="inputRole" class="form-select">
+                                <option value="ROLE_STUDENT">Student</option>
+                                <option value="ROLE_INSTRUCTOR">Instructor</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="terms" required>
+                            <label class="form-check-label" for="terms">
+                                I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a>
+                            </label>
+                        </div>
+
+                        <div class="d-grid">
+                            <button class="btn btn-primary" type="submit">Register</button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <p>Already have an account? <a href="{{ path('auth_login') }}">Sign in here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

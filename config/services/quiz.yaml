@@ -1,0 +1,69 @@
+# Quiz Domain Services Configuration
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # Quiz Domain Services
+    App\Quiz\Domain\:
+        resource: '../../src/Quiz/Domain/*'
+        exclude: '../../src/Quiz/Domain/{Entity,ValueObject,Event,Exception}'
+
+    # Quiz Application Services
+    App\Quiz\Application\:
+        resource: '../../src/Quiz/Application/*'
+
+    # Quiz Infrastructure Services
+    App\Quiz\Infrastructure\:
+        resource: '../../src/Quiz/Infrastructure/*'
+
+    # Quiz UI Services
+    App\Quiz\UI\:
+        resource: '../../src/Quiz/UI/*'
+
+    # Repository Interfaces
+    App\Quiz\Domain\Repository\CategoryRepositoryInterface:
+        alias: App\Quiz\Infrastructure\Persistence\DoctrineOrmCategoryRepository
+
+    App\Quiz\Domain\Repository\QuestionRepositoryInterface:
+        alias: App\Quiz\Infrastructure\Persistence\DoctrineOrmQuestionRepository
+
+    App\Quiz\Domain\Repository\QuizResultRepositoryInterface:
+        alias: App\Quiz\Infrastructure\Persistence\DoctrineOrmQuizResultRepository
+
+    # Quiz Session Repository with Caching
+    App\Quiz\Domain\Repository\QuizSessionRepositoryInterface:
+        alias: App\Quiz\Infrastructure\Cache\CachedQuizSessionRepository
+
+    # Doctrine Repository (base implementation)
+    App\Quiz\Infrastructure\Persistence\Doctrine\ORM\DoctrineQuizSessionRepository:
+        arguments:
+            $registry: '@doctrine'
+
+    # Cached Repository Decorator
+    App\Quiz\Infrastructure\Cache\CachedQuizSessionRepository:
+        arguments:
+            $decorated: '@App\Quiz\Infrastructure\Persistence\Doctrine\ORM\DoctrineQuizSessionRepository'
+            $cache: '@cache.quiz_sessions'
+
+    # Real-time Service
+    App\Shared\Infrastructure\RealTime\MercureRealTimeService:
+        arguments:
+            $hub: '@mercure.hub.default'
+
+    # Query Handlers with caching - Temporarily disabled
+    # App\Quiz\Application\Handler\GetActiveQuizSessionQueryHandler:
+    #     arguments:
+    #         $cache: '@cache.app'
+
+    # App\Quiz\Application\Handler\GetQuizSessionDetailsQueryHandler:
+    #     arguments:
+    #         $cache: '@cache.app'
+
+    # App\Quiz\Application\Handler\GetQuizSessionAnalyticsQueryHandler:
+    #     arguments:
+    #         $cache: '@cache.app'
+
+    # App\Quiz\Application\Handler\GetAdaptiveLearningDataQueryHandler:
+    #     arguments:
+    #         $cache: '@cache.app'

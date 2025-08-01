@@ -1,0 +1,45 @@
+# User Domain Services Configuration
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # User Domain Services
+    App\User\Domain\:
+        resource: '../../src/User/Domain/*'
+        exclude: '../../src/User/Domain/{Entity,ValueObject,Event,Exception}'
+
+    # User Application Services
+    App\User\Application\:
+        resource: '../../src/User/Application/*'
+
+    # User Infrastructure Services
+    App\User\Infrastructure\:
+        resource: '../../src/User/Infrastructure/*'
+
+    # Repositories
+    App\User\Domain\Repository\UserRepositoryInterface:
+        alias: App\User\Infrastructure\Persistence\DoctrineUserRepository
+
+    App\User\Infrastructure\Persistence\DoctrineUserRepository:
+        arguments:
+            $registry: '@doctrine'
+        tags:
+            - { name: doctrine.repository_service }
+
+    # Security
+    App\User\Infrastructure\Security\UserProvider:
+        arguments:
+            $userRepository: '@App\User\Domain\Repository\UserRepositoryInterface'
+
+    # Command Handlers
+    App\User\Application\Handler\RegisterUserCommandHandler:
+        arguments:
+            $userRepository: '@App\User\Domain\Repository\UserRepositoryInterface'
+            $passwordHasher: '@security.user_password_hasher'
+            $logger: '@monolog.logger'
+        tags:
+            - { name: messenger.message_handler, bus: command.bus }
+
+    # Query Handlers - Temporarily disabled
+    # App\User\Application\Handler\GetUserByIdQueryHandler:

@@ -1,0 +1,137 @@
+# Production Database Configuration for PostgreSQL
+
+# Connection pool settings
+doctrine:
+    dbal:
+        connections:
+            default:
+                # Connection pooling
+                options:
+                    1002: 'SET search_path TO quiz_app,public'
+                    # Connection timeout
+                    PDO::ATTR_TIMEOUT: 60
+                    # Enable persistent connections
+                    PDO::ATTR_PERSISTENT: true
+                    # Set timezone
+                    1000: "SET timezone TO 'UTC'"
+                
+                # Performance optimization
+                logging: false
+                profiling: false
+                
+                # PostgreSQL specific optimizations
+                charset: utf8
+                server_version: '15'
+                
+                # Connection pool configuration (if using pgbouncer)
+                # dbname_suffix: ''
+                
+        types:
+            # Custom types for better PostgreSQL integration
+            # uuid: Ramsey\Uuid\Doctrine\UuidType  # Not installed
+            # jsonb: Scienta\DoctrineJsonFunctions\DBAL\Types\JsonbType  # Not installed
+
+    orm:
+        # Production optimizations
+        auto_generate_proxy_classes: false
+        proxy_dir: '%kernel.cache_dir%/doctrine/orm/Proxies'
+        
+        # Enable second level cache
+        second_level_cache:
+            enabled: true
+            regions:
+                quiz_data_region:
+                    lifetime: 7200
+                    cache_driver:
+                        type: pool
+                        pool: cache.app
+                user_data_region:
+                    lifetime: 3600
+                    cache_driver:
+                        type: pool
+                        pool: cache.app
+                analytics_region:
+                    lifetime: 1800
+                    cache_driver:
+                        type: pool
+                        pool: cache.app
+        
+        # Query cache
+        query_cache_driver:
+            type: pool
+            pool: doctrine.query_cache_pool
+            
+        # Result cache
+        result_cache_driver:
+            type: pool
+            pool: doctrine.result_cache_pool
+            
+        # Metadata cache
+        metadata_cache_driver:
+            type: pool
+            pool: doctrine.metadata_cache_pool
+
+        # Enable filters for performance - Temporarily disabled
+        # filters:
+        #     softdeleteable:
+        #         class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
+        #         enabled: true
+
+# Cache pools configuration
+framework:
+    cache:
+        default_redis_provider: redis://redis:6379
+        pools:
+            doctrine.query_cache_pool:
+                adapter: cache.adapter.redis
+                default_lifetime: 7200
+                
+            doctrine.result_cache_pool:
+                adapter: cache.adapter.redis
+                default_lifetime: 3600
+                
+            doctrine.metadata_cache_pool:
+                adapter: cache.adapter.redis
+                default_lifetime: 86400
+                
+            quiz.analytics_cache:
+                adapter: cache.adapter.redis_tag_aware
+                default_lifetime: 1800
+
+# PostgreSQL optimization parameters (postgresql.conf)
+# These should be set at the database server level
+#
+# # Memory settings
+# shared_buffers = 256MB                  # 25% of RAM for dedicated server
+# effective_cache_size = 1GB              # 75% of RAM
+# work_mem = 64MB                         # Per operation memory
+# maintenance_work_mem = 256MB            # For maintenance operations
+#
+# # Connection settings
+# max_connections = 200                   # Adjust based on application needs
+# shared_preload_libraries = 'pg_stat_statements'
+#
+# # WAL settings
+# wal_buffers = 16MB
+# checkpoint_completion_target = 0.7
+# wal_compression = on
+#
+# # Query planner
+# random_page_cost = 1.1                  # For SSD storage
+# effective_io_concurrency = 200          # For SSD storage
+#
+# # Logging
+# log_min_duration_statement = 1000       # Log slow queries (>1s)
+# log_statement = 'mod'                   # Log DDL/DML statements
+# log_line_prefix = '%t [%p]: [%l-1] user=%u,db=%d,app=%a,client=%h '
+#
+# # Auto vacuum settings
+# autovacuum = on
+# autovacuum_max_workers = 4
+# autovacuum_naptime = 30s
+# autovacuum_vacuum_threshold = 50
+# autovacuum_analyze_threshold = 50
+#
+# # Lock settings
+# deadlock_timeout = 1s
+# log_lock_waits = on

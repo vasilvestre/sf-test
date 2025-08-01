@@ -1,0 +1,5 @@
+# Enhanced Quiz API Routes (v2)
+quiz_v2_api:
+    resource: '../../src/Quiz/UI/Controller/EnhancedQuizController.php'
+    type: attribute
+    prefix: /api/quiz/v2

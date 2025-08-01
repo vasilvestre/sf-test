@@ -3,27 +3,105 @@ framework:
         failure_transport: failed
 
         transports:
-            # https://symfony.com/doc/current/messenger.html#transport-configuration
-            async:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+            # High Priority Transport - User critical operations
+            high_priority:
+                dsn: '%env(MESSENGER_TRANSPORT_HIGH_DSN)%'
+                options:
+                    use_notify: true
+                    check_delayed_interval: 10000
+                retry_strategy:
+                    max_retries: 5
+                    multiplier: 1.5
+                    delay: 1000
+                    max_delay: 30000
+
+            # Normal Priority Transport - Standard operations
+            normal_priority:
+                dsn: '%env(MESSENGER_TRANSPORT_NORMAL_DSN)%'
+                options:
+                    use_notify: true
+                    check_delayed_interval: 30000
+                retry_strategy:
+                    max_retries: 3
+                    multiplier: 2
+                    delay: 2000
+                    max_delay: 60000
+
+            # Low Priority Transport - Analytics and reporting
+            low_priority:
+                dsn: '%env(MESSENGER_TRANSPORT_LOW_DSN)%'
                 options:
                     use_notify: true
                     check_delayed_interval: 60000
                 retry_strategy:
-                    max_retries: 3
-                    multiplier: 2
-            failed: 'doctrine://default?queue_name=failed'
-            # sync: 'sync://'
+                    max_retries: 2
+                    multiplier: 3
+                    delay: 5000
+                    max_delay: 300000
 
-        default_bus: messenger.bus.default
+            # Email Transport - Email notifications
+            email_transport:
+                dsn: '%env(MESSENGER_TRANSPORT_EMAIL_DSN)%'
+                options:
+                    use_notify: true
+                    check_delayed_interval: 15000
+                retry_strategy:
+                    max_retries: 4
+                    multiplier: 2
+                    delay: 3000
+                    max_delay: 120000
+
+            # Sync Transport for testing
+            sync: 'sync://'
+            
+            # Failed message transport
+            failed: 'doctrine://default?queue_name=failed'
+
+        default_bus: command.bus
 
         buses:
-            messenger.bus.default: []
+            # Command Bus - For write operations (CQRS Commands)
+            command.bus:
+                middleware:
+                    - validation
+                    - doctrine_ping_connection
+                    - doctrine_close_connection
+                    - App\Shared\Infrastructure\Messenger\Middleware\LoggingMiddleware
+                    - App\Shared\Infrastructure\Messenger\Middleware\PerformanceMiddleware
+                    - App\Shared\Infrastructure\Messenger\Middleware\TransactionMiddleware
+                    - App\Shared\Infrastructure\Messenger\Middleware\DomainEventMiddleware
+
+            # Query Bus - For read operations (CQRS Queries)  
+            query.bus:
+                middleware:
+                    - validation
+                    - App\Shared\Infrastructure\Messenger\Middleware\LoggingMiddleware
+                    - App\Shared\Infrastructure\Messenger\Middleware\PerformanceMiddleware
+                    - App\Shared\Infrastructure\Messenger\Middleware\CacheMiddleware
+
+            # Event Bus - For domain events
+            event.bus:
+                default_middleware: allow_no_handlers
+                middleware:
+                    - validation
+                    - App\Shared\Infrastructure\Messenger\Middleware\LoggingMiddleware
 
         routing:
-            Symfony\Component\Mailer\Messenger\SendEmailMessage: async
-            Symfony\Component\Notifier\Message\ChatMessage: async
-            Symfony\Component\Notifier\Message\SmsMessage: async
+            # Symfony Core Messages
+            Symfony\Component\Mailer\Messenger\SendEmailMessage: email_transport
+            Symfony\Component\Notifier\Message\ChatMessage: email_transport
+            Symfony\Component\Notifier\Message\SmsMessage: email_transport
 
-            # Route your messages to the transports
-            # 'App\Message\YourMessage': async
+            # Quiz Commands - Standard operations
+            App\Quiz\Application\Command\SubmitQuizAttemptCommand: high_priority
+            App\Quiz\Application\Command\CreateQuizCommand: normal_priority
+            App\Quiz\Application\Command\CreateQuestionCommand: normal_priority
+            App\Quiz\Application\Command\UpdateQuestionCommand: normal_priority
+            App\Quiz\Application\Command\CreateCategoryCommand: normal_priority
+
+            # Email Commands
+            App\Shared\Application\Command\SendEmailCommand: email_transport
+
+            # Domain Events - Async processing
+            App\Quiz\Domain\Event\QuizAttemptCompleted: normal_priority
+            App\Quiz\Domain\Event\QuestionAnswered: low_priority

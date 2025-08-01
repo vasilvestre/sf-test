@@ -1,0 +1,18 @@
+# Shared Kernel Services Configuration
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # Shared Domain Services
+    App\Shared\Domain\:
+        resource: '../../src/Shared/Domain/*'
+        exclude: '../../src/Shared/Domain/{Entity,ValueObject,Event,Exception}'
+
+    # Shared Application Services
+    App\Shared\Application\:
+        resource: '../../src/Shared/Application/*'
+
+    # Shared Infrastructure Services
+    App\Shared\Infrastructure\:
+        resource: '../../src/Shared/Infrastructure/*'
