@@ -49,8 +49,10 @@ questions:
             - {value: Symfony\Component\DomCrawler\CssSelector,   correct: false}
             - {value: Symfony\Bundle\FrameworkBundle\CssSelector, correct: false}
     -
-        question: 'Event Listeners is use to Regrouping multiple listeners inside a single class ?'
+        question: 'Which Symfony component allows you to regroup multiple listeners for a single event inside a single class ?'
         answers:
-            - {value: "False",  correct: true}
-            - {value: "True",   correct: false}
+            - {value: "Event Listener", correct: false, explanation: "Incorrect. An Event Listener is typically a single method (or callable) registered for a specific event. While you can have multiple listeners, they are not grouped into a single class by default."}
+            - {value: "Event Subscriber", correct: true, explanation: "Correct! An Event Subscriber is a class that implements `EventSubscriberInterface` and defines a `getSubscribedEvents()` method. This allows you to define multiple listener methods for different events (or even the same event) all within one class."}
+            - {value: "Controller", correct: false, explanation: "Incorrect. Controllers handle HTTP requests, not events."}
+            - {value: "Event Dispatcher", correct: false, explanation: "Incorrect. The Event Dispatcher is the service that dispatches events; it does not regroup listeners into a class."}
 
