@@ -136,7 +136,8 @@ questions:
     -
         question: 'How do you correctly call another command from within your command class?'
         answers:
-            - {value: 'By finding the command and calling its `run()` method.', correct: true}
-            - {value: 'By dispatching a new `ConsoleCommandEvent`.', correct: false}
-            - {value: 'By creating a new Process and executing `bin/console ...`.', correct: false}
-            - {value: 'By calling `$this->forward(''app:other-command'', $input)`.', correct: false}
+            - {value: 'By finding the command and calling its `run()` method.', correct: false, explanation: "Incorrect. While this might work in some cases, it''s not the recommended approach in modern Symfony. The `run()` method can have undesirable side effects, such as terminating the application. The correct method is to use `doRun()` on the Application object."}
+            - {value: 'By dispatching a new `ConsoleCommandEvent`.', correct: false, explanation: "Incorrect. Console events are for hooking into the command lifecycle, not for executing other commands."}
+            - {value: 'By creating a new Process and executing `bin/console ...`.', correct: false, explanation: "Incorrect. While this would execute the command, it creates a separate, isolated process. This is inefficient and not the proper way to call another command within the same application context."}
+            - {value: 'By calling `$this->getApplication()->doRun($input, $output)`.', correct: true, explanation: "Correct! To call another command synchronously from within a command class, you should create an `ArrayInput` (or similar) representing the command and arguments, and then pass it to the Application's `doRun()` method."}
+            - {value: 'By calling `$this->forward(''app:other-command'', $input)`.', correct: false, explanation: "Incorrect. The `forward()` method does not exist on a command class; it is a concept from the controller layer for forwarding requests."}
