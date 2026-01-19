@@ -50,10 +50,10 @@ questions:
     -
         question: 'Which of the following statements is not true?'
         answers:
-            - {value: "In PHP>=5.6 argument lists may include the ... token to denote that the function accepts a variable number of arguments",               correct: false}
-            - {value: "A function name, as other labels in PHP, must match the following regular expression: [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*",        correct: false}
-            - {value: "Variable functions work with language constructs such as echo, print, unset(), isset(), empty(), include or require",                   correct: true}
-            - {value: "Assigning a closure (anonymous function) to a variable uses the same syntax as any other assignment, including the trailing semicolon", correct: false}
+            - {value: "In PHP>=5.6 argument lists may include the ... token to denote that the function accepts a variable number of arguments",               correct: false, explanation: "This statement is true. Since PHP 5.6, the `...` token can be used in function declarations to create variadic functions, which accept a variable number of arguments."}
+            - {value: "A function name, as other labels in PHP, must match the following regular expression: [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*",        correct: false, explanation: "This statement is true. This regular expression defines the valid characters for function and variable names in PHP, which can start with a letter or underscore, followed by any number of letters, numbers, or underscores."}
+            - {value: "Variable functions work with language constructs such as echo, print, unset(), isset(), empty(), include or require",                   correct: true, explanation: "This statement is not true. Variable functions, where a variable is used to call a function, do not work with language constructs like `echo`, `print`, `isset()`, `empty()`, `unset()`, `include`, or `require`."}
+            - {value: "Assigning a closure (anonymous function) to a variable uses the same syntax as any other assignment, including the trailing semicolon", correct: false, explanation: "This statement is true. When assigning an anonymous function (a closure) to a variable, the entire assignment statement must be terminated with a semicolon, just like any other variable assignment in PHP."}
     -
         question: 'Which of the following function declarations must be used to return a reference?'
         answers:
@@ -72,11 +72,11 @@ questions:
     -
         question: 'According to the PHP Framework Interoperability Group, which PSRs concern best coding practices ?'
         answers:
-            - {value: "PSR-0", correct: false}
-            - {value: "PSR-1", correct: true}
-            - {value: "PSR-2", correct: true}
-            - {value: "PSR-3", correct: false}
-            - {value: "PSR-4", correct: false}
+            - {value: "PSR-0", correct: false, explanation: "Incorrect. PSR-0 is a deprecated autoloading standard, not a coding style guide."}
+            - {value: "PSR-1", correct: true, explanation: "Correct! PSR-1 is the Basic Coding Standard, covering fundamentals like naming conventions."}
+            - {value: "PSR-2", correct: true, explanation: "Correct! PSR-2 was a Coding Style Guide (now superseded by PSR-12) that provided rules for code formatting."}
+            - {value: "PSR-3", correct: false, explanation: "Incorrect. PSR-3 defines a common interface for logging libraries, not general coding practices."}
+            - {value: "PSR-4", correct: false, explanation: "Incorrect. PSR-4 is the modern autoloading standard that replaced PSR-0."}
     -
         question: 'Since PHP 5.4, which functionality allows horizontal composition of behavior ?'
         answers:

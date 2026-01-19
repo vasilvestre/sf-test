@@ -31,11 +31,11 @@ questions:
     -
         question: 'Which from the following list is not an appropriate use of an array?'
         answers:
-            - {value: 'As a list', correct: false}
-            - {value: 'All of these uses are valid	', correct: true}
-            - {value: 'As a Lookup Table', correct: false}
-            - {value: 'A Stack', correct: false}
-            - {value: 'As a hash table', correct: false}
+            - {value: 'As a list', correct: false, explanation: "Incorrect. This is a primary use. A simple numerically indexed array (e.g., `['apple', 'banana']`) is a list."}
+            - {value: 'All of these uses are valid', correct: true, explanation: "Correct! PHP arrays are extremely versatile and can be used as lists, lookup tables (hash maps), stacks, queues, and more."}
+            - {value: 'As a Lookup Table', correct: false, explanation: "Incorrect. Associative arrays (e.g., `['fruit' => 'apple']`) are a perfect use case for lookup tables."}
+            - {value: 'A Stack', correct: false, explanation: "Incorrect. Using `array_push()` and `array_pop()` allows an array to function as a LIFO (Last-In, First-Out) stack."}
+            - {value: 'As a hash table', correct: false, explanation: "Incorrect. This is what PHP associative arrays are under the hood. They are implemented as hash maps (hash tables)."}
     -
         question: |
                     What is the output of this code snippet?

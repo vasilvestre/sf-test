@@ -108,10 +108,10 @@ questions:
     -
         question: 'What is the difference between the `include` function and the `embed` tag?'
         answers:
-            - {value: '`embed` allows you to include another template while also overriding blocks defined within it.', correct: true}
-            - {value: '`include` is for including entire templates, while `embed` is for including small snippets.', correct: false}
-            - {value: '`embed` is deprecated in favor of `include`.', correct: false}
-            - {value: 'There is no functional difference.', correct: false}
+            - {value: '`embed` allows you to include another template while also overriding blocks defined within it.', correct: true, explanation: "Correct! The `embed` tag is powerful because it lets you include another template's content, just like `include`, but also allows you to override `block`s defined within that included template, similar to how `extends` works."}
+            - {value: '`include` is for including entire templates, while `embed` is for including small snippets.', correct: false, explanation: "Incorrect. Both `include` and `embed` can be used for templates of any size. The primary difference is not the size of the content, but the ability of `embed` to override blocks."}
+            - {value: '`embed` is deprecated in favor of `include`.', correct: false, explanation: "Incorrect. `embed` is not deprecated. It is a current and distinct feature of Twig that provides functionality different from `include`."}
+            - {value: 'There is no functional difference.', correct: false, explanation: "Incorrect. There is a significant functional difference: `embed` allows overriding blocks within the included template, whereas `include` does not."}
     -
         question: 'How can you create a link to a specific asset (e.g., a CSS file) in your template?'
         answers:

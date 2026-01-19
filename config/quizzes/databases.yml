@@ -26,10 +26,10 @@ questions:
                     $stmt->bindColumn(3, $result);
                     $row = $stmt->fetch(PDO::FETCH_BOUND);
         answers:
-            - { value: 'The database will return no rows.', correct: false }
-            - { value: 'The value of $row will be an array.', correct: false }
-            - { value: 'The value of $result will be empty.', correct: false }
-            - { value: "The value of $result will be 'gamma@example.net'.", correct: true }
+            - { value: 'The database will return no rows.', correct: false, explanation: "Incorrect. The query `SELECT * FROM users WHERE id = :id` with `:id` bound to 3 will find and return the row for the user 'clara'." }
+            - { value: 'The value of $row will be an array.', correct: false, explanation: "Incorrect. Because `PDO::FETCH_BOUND` is used, the `fetch()` method returns `true` on success and assigns the fetched column values to the variables bound by `bindColumn()`. `$row` will be `true`, not an array." }
+            - { value: 'The value of $result will be empty.', correct: false, explanation: "Incorrect. The `bindColumn(3, $result)` call specifically binds the third column ('email') from the result set to the `$result` variable. After `fetch()`, `$result` will contain the email address." }
+            - { value: "The value of $result will be 'gamma@example.net'.", correct: true, explanation: "Correct! The query selects the user with `id=3`. `bindColumn(3, $result)` binds the third column (email) to the `$result` variable. `fetch(PDO::FETCH_BOUND)` then populates `$result` with the value 'gamma@example.net'." }
     -
         question: 'Transactions are used to...'
         answers:

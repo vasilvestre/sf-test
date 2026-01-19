@@ -17,10 +17,10 @@ questions:
     -
         question: 'Which method on a `Response` object can be used to check if the status code is in the 2xx range?'
         answers:
-            - {value: '$response->isSuccessful()', correct: true}
-            - {value: '$response->isOk()', correct: true}
-            - {value: '$response->isClientError()', correct: false}
-            - {value: '$response->isServerError()', correct: false}
+            - {value: '$response->isSuccessful()', correct: true, explanation: 'Correct! This method returns true if the response is successful (HTTP status code 2xx).'}
+            - {value: '$response->isOk()', correct: false, explanation: 'Incorrect. This method returns true only if the response has a 200 (OK) status code, not the entire 2xx range.'}
+            - {value: '$response->isClientError()', correct: false, explanation: 'Incorrect. This method returns true if the response has a 4xx status code.'}
+            - {value: '$response->isServerError()', correct: false, explanation: 'Incorrect. This method returns true if the response has a 5xx status code.'}
     -
         question: 'How do you access a GET parameter named ``foo`` from the ``Request`` object?'
         answers:

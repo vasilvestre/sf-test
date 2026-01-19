@@ -11,11 +11,11 @@ questions:
     -
         question: 'Which of the following are not valid ways to embed a variable into a string?'
         answers:
-            - {value: '$a = "Value: $value->getValue()";', correct: true}
-            - {value: '$a = "Value: {$value}";', correct: false}
-            - {value: '$a = ''Value: $value'';', correct: true}
-            - {value: '$a = "Value: $value";', correct: false}
-            - {value: '$a = "Value: {$value[''val'']}";', correct: false}
+            - {value: '$a = "Value: $value->getValue()";', correct: true, explanation: "Incorrect syntax. Method calls on objects cannot be directly embedded in double-quoted strings this way. You must use the complex (curly brace) syntax."}
+            - {value: '$a = "Value: {$value}";', correct: false, explanation: "This is a valid way to embed a variable using complex (curly brace) syntax, which is the most explicit and recommended method."}
+            - {value: '$a = ''Value: $value'';', correct: true, explanation: "Variables are not parsed inside single-quoted strings. The literal text '$value' will be output."}
+            - {value: '$a = "Value: $value";', correct: false, explanation: "This is the simplest and a valid way to embed a simple variable in a double-quoted string."}
+            - {value: '$a = "Value: {$value[''val'']}";', correct: false, explanation: "This is a valid way to embed an array element using complex (curly brace) syntax."}
     -
         question: | 
                     What variable reference would go in the spots indicated by ????? in the code segment below?
