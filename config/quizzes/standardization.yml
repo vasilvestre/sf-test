@@ -10,14 +10,13 @@ questions:
     -
         question: 'How to render properly template located in src/Acme/TestBundle/Resources/views/Question/Item/list.html.twig?'
         answers:
-            - {value: "@AcmeTestBundle:Question:Item/list.html.twig",  correct: true}
-            - {value: "@AcmeTestBundle:Question:Item:list.html.twig",  correct: false}
-            - {value: "@AcmeTestBundle:Question/Item/list.html.twig",  correct: false}
-            - {value: "@Acme:TestBundle:Question:Item/list.html.twig", correct: false}
-            - {value: "@Acme:TestBundle:Question/Item/list.html.twig", correct: false}
+            - {value: "@AcmeTest/Question/Item/list.html.twig",  correct: true, explanation: "Correct! This is the modern Twig namespaced syntax. The bundle 'AcmeTestBundle' is referenced by the '@AcmeTest' namespace."}
+            - {value: "AcmeTestBundle:Question/Item:list.html.twig",  correct: false, explanation: "Incorrect. This is the old, deprecated syntax and is no longer supported in modern Symfony applications."}
+            - {value: "@AcmeTestBundle/Question/Item/list.html.twig",  correct: false, explanation: "Incorrect. This is close, but the namespace should not include the 'Bundle' suffix. It should be '@AcmeTest'."}
+            - {value: "src/Acme/TestBundle/Resources/views/Question/Item/list.html.twig", correct: false, explanation: "Incorrect. You cannot use the full file path. You must use the Twig namespace syntax."}
     -
         question: 'Service naming conventions: select all valid services identifiers'
         answers:
-            - {value: "fos_user.listener.email_confirmation",  correct: true}
-            - {value: "sensio_framework_extra.PSR7.http_message_factory",  correct: false}
-            - {value: "sensio_distribution.security_checker",  correct: true}
+            - {value: "fos_user.listener.email_confirmation",  correct: true, explanation: 'Correct! Uses lowercase with underscores for vendor/bundle prefix and dots to separate logical parts. Follows Symfony naming conventions.'}
+            - {value: "sensio_framework_extra.PSR7.http_message_factory",  correct: false, explanation: 'Incorrect. "PSR7" uses uppercase letters which violates the convention. Service identifiers should be all lowercase (e.g., "psr7").'}
+            - {value: "sensio_distribution.security_checker",  correct: true, explanation: 'Correct! All lowercase, uses underscores within the vendor prefix and dots to separate components. Follows Symfony conventions.'}

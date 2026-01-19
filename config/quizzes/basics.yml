@@ -61,7 +61,7 @@ questions:
 
                         echo $a + $b + $c;
         answers:
-            - {value: '20', correct: true}
-            - {value: '22', correct: false}
-            - {value: '$a is an invalid value', correct: false}
-            - {value: '2', correct: false}
+            - {value: '20', correct: true, explanation: 'Correct! 010 is octal (= 8 in decimal), 0xA is hexadecimal (= 10 in decimal), so 8 + 10 + 2 = 20.'}
+            - {value: '22', correct: false, explanation: 'Incorrect. You likely interpreted 010 as decimal 10, but the leading 0 makes it octal. 010 in octal = 8 in decimal.'}
+            - {value: '$a is an invalid value', correct: false, explanation: 'Incorrect. 010 is valid PHP syntax for an octal number (base 8). Numbers starting with 0 are octal literals.'}
+            - {value: '2', correct: false, explanation: 'Incorrect. All three variables have valid numeric values that add together. This is not just $c.'}

@@ -3,10 +3,10 @@ questions:
     -
         question: 'In a controller extending `AbstractController`, what is the correct method to redirect to an external URL?'
         answers:
-            - {value: 'return $this->redirect(''http://example.com'');', correct: true}
-            - {value: 'return new RedirectResponse(''http://example.com'');', correct: true}
-            - {value: 'return $this->redirectToUrl(''http://example.com'');', correct: false}
-            - {value: 'return new Response(headers: [''Location'' => ''http://example.com'']);', correct: false}
+            - {value: 'return $this->redirect(''http://example.com'');', correct: true, explanation: 'Correct! The redirect() method from AbstractController accepts any URL (internal or external) and returns a RedirectResponse.'}
+            - {value: 'return new RedirectResponse(''http://example.com'');', correct: true, explanation: 'Correct! Creating a RedirectResponse directly also works. This is what redirect() does internally.'}
+            - {value: 'return $this->redirectToUrl(''http://example.com'');', correct: false, explanation: 'Incorrect. There is no redirectToUrl() method in AbstractController. Use redirect() instead.'}
+            - {value: 'return new Response(headers: [''Location'' => ''http://example.com'']);', correct: false, explanation: 'Incorrect. This sets the Location header but missing the 3xx status code (301/302). The browser won''t redirect with a 200 status.'}
     -
         question: 'What is the modern, recommended way to access a service in a controller?'
         answers:

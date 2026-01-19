@@ -136,15 +136,15 @@ questions:
     -
         question: 'Which of the following are valid kernel events in Symfony?'
         answers:
-            - {value: "kernel.request", correct: true}
-            - {value: "kernel.controller", correct: true}
-            - {value: "kernel.view", correct: true}
-            - {value: "kernel.response", correct: true}
-            - {value: "kernel.finish_request", correct: true}
-            - {value: "kernel.terminate", correct: true}
-            - {value: "kernel.exception", correct: true}
-            - {value: "kernel.template", correct: false}
-            - {value: "kernel.start", correct: false}
+            - {value: "kernel.request", correct: true, explanation: 'Correct! Dispatched at the start of request handling, before the controller is determined. Used for early request processing, security, routing.'}
+            - {value: "kernel.controller", correct: true, explanation: 'Correct! Dispatched after the controller is resolved but before it''s executed. Used to modify controller arguments or swap controllers.'}
+            - {value: "kernel.view", correct: true, explanation: 'Correct! Dispatched when the controller returns a non-Response value. Used to convert return values (arrays, objects) into Response objects.'}
+            - {value: "kernel.response", correct: true, explanation: 'Correct! Dispatched after the controller returns a Response. Used to modify the response (add headers, compress content, etc.).'}
+            - {value: "kernel.finish_request", correct: true, explanation: 'Correct! Dispatched after a sub-request finishes. Used for cleanup after nested/embedded requests.'}
+            - {value: "kernel.terminate", correct: true, explanation: 'Correct! Dispatched after the response is sent to the client. Used for heavy post-processing (emails, logs) without affecting response time.'}
+            - {value: "kernel.exception", correct: true, explanation: 'Correct! Dispatched when an uncaught exception occurs. Used to handle exceptions and generate error responses.'}
+            - {value: "kernel.template", correct: false, explanation: 'Incorrect. This event does not exist in Symfony. Template rendering is handled by Twig, not kernel events.'}
+            - {value: "kernel.start", correct: false, explanation: 'Incorrect. This event does not exist. The first kernel event is kernel.request, not kernel.start.'}
     -
         question: 'Are controller arguments resolved before or after the controller is called?'
         answers:

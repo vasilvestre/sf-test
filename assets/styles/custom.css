@@ -1,65 +1,70 @@
-/* Custom styles to complement Bootstrap */
-
-/* Add a nice background color to the body */
 body {
-    background-color: #f8f9fa;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
 
-/* Custom styles for the quiz application */
 .answer-item.selected.correct {
-    background-color: rgba(25, 135, 84, 0.2) !important;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.25) 100%) !important;
+    border-left: 4px solid var(--color-success-500);
+    box-shadow: var(--shadow-sm);
 }
 
 .answer-item.selected:not(.correct) {
-    background-color: rgba(220, 53, 69, 0.2) !important;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.25) 100%) !important;
+    border-left: 4px solid var(--color-danger-500);
+    box-shadow: var(--shadow-sm);
 }
 
 .answer-item.correct:not(.selected) {
-    background-color: rgba(13, 110, 253, 0.1) !important;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.15) 100%) !important;
+    border-left: 4px solid var(--color-info-500);
+    box-shadow: var(--shadow-sm);
 }
 
-/* Add some spacing to the chart container */
 .chart-container {
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-2xl);
 }
 
-/* Custom styles for the accordion in the results page */
 .accordion-button:not(.collapsed) {
-    background-color: rgba(13, 110, 253, 0.1);
-    color: #0d6efd;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.15) 100%);
+    color: var(--color-primary-700);
+    border-left: 4px solid var(--color-primary-500);
 }
 
-/* Add a subtle hover effect to cards */
 .card {
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+    border: none;
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-lg);
 }
 
 .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
 }
 
-/* Make sure buttons have a nice hover effect */
 .btn {
-    transition: all 0.2s;
+    transition: all var(--transition-fast);
 }
 
 .btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
-/* Add a nice shadow to the main container */
 .container {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-    background-color: white;
-    border-radius: 8px;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    box-shadow: var(--shadow-2xl);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: var(--radius-2xl);
+    padding-top: var(--space-2xl);
+    padding-bottom: var(--space-2xl);
 }
 
-/* Custom badge styles */
 .badge {
-    font-weight: 500;
-    letter-spacing: 0.5px;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-wide);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-full);
 }

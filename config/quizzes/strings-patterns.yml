@@ -139,11 +139,12 @@ questions:
     -
         question: 'Which PCRE regular expression will match exactly the string PhP5-rocks'
         answers:
-            - {value: '/^[hp1-5]*\-.*/i', correct: true}
-            - {value: '/[hp1-5]*\-.?/', correct: false}
-            - {value: '/[hp][1-5]*\-.*/', correct: false}
-            - {value: '/[PhP]{3}[1-5]{2,3}\-.*$/', correct: false}
-            - {value: '/[a-z1-5\-]*/', correct: false}
+            - {value: '/^[hp1-5]*\-.*/i', correct: true, explanation: 'Correct! The /i flag makes it case-insensitive, ^ anchors to start, [hp1-5]* matches "PhP5" (any combination of h,p,1-5), \- matches the hyphen, and .* matches "rocks".'}
+            - {value: '/[hp1-5]*\-.?/', correct: false, explanation: 'Incorrect. Missing the /i flag for case-insensitivity (won''t match "P"), .? only matches 0-1 chars after hyphen (won''t match "rocks"), and no ^ anchor means it could match substrings.'}
+            - {value: '/[hp][1-5]*\-.*/', correct: false, explanation: 'Incorrect. [hp] only matches one character (won''t match "PhP"), missing /i flag for case-insensitivity, and no anchors means it matches substrings not exact strings.'}
+            - {value: '/[PhP]{3}[1-5]{2,3}\-.*$/', correct: false, explanation: 'Incorrect. [PhP]{3} expects exactly 3 chars from the set (could match "PPP"), [1-5]{2,3} expects 2-3 digits (won''t match single "5"), and no ^ anchor means partial matches.'}
+            - {value: '/[a-z1-5\-]*/', correct: false, explanation: 'Incorrect. This pattern has no anchors (^ or $) so it matches any substring, even empty strings. It would match parts of many strings, not exactly "PhP5-rocks".'}
+
     -
         question: 'If regular expressions must be used, in general which type of regular expression functions available to PHP is preferred for performance reasons?'
         answers:

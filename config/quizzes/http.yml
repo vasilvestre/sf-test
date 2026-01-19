@@ -22,19 +22,19 @@ questions:
             - {value: '$response->isClientError()', correct: false}
             - {value: '$response->isServerError()', correct: false}
     -
-        question: 'How do you access a GET parameter named `foo` from the `Request` object?'
+        question: 'How do you access a GET parameter named ``foo`` from the ``Request`` object?'
         answers:
             - {value: '$request->query->get(''foo'');', correct: true}
             - {value: '$request->attributes->get(''foo'');', correct: false}
             - {value: '$request->request->get(''foo'');', correct: false}
             - {value: '$request->get(''foo'');', correct: true}
     -
-        question: 'How do you access a POST parameter named `bar` from the `Request` object?'
+        question: 'How do you access a POST parameter named ``bar`` from the ``Request`` object?'
         answers:
-            - {value: '$request->request->get(''bar'');', correct: true}
-            - {value: '$request->query->get(''bar'');', correct: false}
-            - {value: '$request->get(''bar'');', correct: false}
-            - {value: '$request->post->get(''bar'');', correct: false}
+            - {value: '$request->request->get(''bar'');', correct: true, explanation: 'Correct! In Symfony, $request->request is a ParameterBag containing POST data. The naming is confusing but "request" refers to the HTTP request body.'}
+            - {value: '$request->query->get(''bar'');', correct: false, explanation: 'Incorrect. $request->query contains GET parameters (URL query string), not POST data.'}
+            - {value: '$request->get(''bar'');', correct: false, explanation: 'Incorrect. While this method exists, it searches across multiple bags (attributes, query, request) which is ambiguous and not recommended for specifically accessing POST data.'}
+            - {value: '$request->post->get(''bar'');', correct: false, explanation: 'Incorrect. There is no $request->post property in Symfony. POST data is accessed via $request->request.'}
     -
         question: 'What does the `getLanguages()` method on the `Request` object return?'
         answers:

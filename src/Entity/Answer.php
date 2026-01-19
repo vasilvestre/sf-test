@@ -6,6 +6,7 @@ use App\Repository\AnswerRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AnswerRepository::class)]
+#[ORM\Index(name: 'idx_answer_question_id', columns: ['question_id'])]
 class Answer
 {
     #[ORM\Id]
@@ -18,6 +19,9 @@ class Answer
 
     #[ORM\Column]
     private ?bool $isCorrect = null;
+
+    #[ORM\Column(length: 1024, nullable: true)]
+    private ?string $explanation = null;
 
     #[ORM\ManyToOne(inversedBy: 'answers')]
     #[ORM\JoinColumn(nullable: false)]
@@ -60,6 +64,18 @@ class Answer
     public function setQuestion(?Question $question): static
     {
         $this->question = $question;
+
+        return $this;
+    }
+
+    public function getExplanation(): ?string
+    {
+        return $this->explanation;
+    }
+
+    public function setExplanation(?string $explanation): static
+    {
+        $this->explanation = $explanation;
 
         return $this;
     }

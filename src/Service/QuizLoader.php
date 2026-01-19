@@ -108,6 +108,8 @@ class QuizLoader
                 ]);
 
             if ($existingQuestion) {
+                // Update existing answers with explanations if provided
+                $this->updateAnswerExplanations($existingQuestion, $questionData['answers']);
                 continue;
             }
 
@@ -127,11 +129,33 @@ class QuizLoader
                 $answer->setText($answerData['text']);
                 $answer->setIsCorrect((bool) $answerData['correct']);
                 $answer->setQuestion($question);
+                
+                if (isset($answerData['explanation'])) {
+                    $answer->setExplanation($answerData['explanation']);
+                }
 
                 $this->entityManager->persist($answer);
             }
         }
 
         $this->entityManager->flush();
+    }
+
+    /**
+     * Update explanations for existing answers
+     */
+    private function updateAnswerExplanations(Question $question, array $answersData): void
+    {
+        $answers = $question->getAnswers();
+        
+        foreach ($answers as $answer) {
+            foreach ($answersData as $answerData) {
+                $answerText = $answerData['text'] ?? $answerData['value'] ?? null;
+                if ($answerText && $answer->getText() === $answerText && isset($answerData['explanation'])) {
+                    $answer->setExplanation($answerData['explanation']);
+                    break;
+                }
+            }
+        }
     }
 }

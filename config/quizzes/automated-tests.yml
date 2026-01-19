@@ -59,10 +59,10 @@ questions:
     -
         question: 'How can you prevent email delivery during tests when using Symfony Mailer?'
         answers:
-            - {value: 'Configure the MAILER_DSN environment variable to "null://"', correct: true}
-            - {value: 'Set `symfony.mailer.disable_delivery: true` in config/packages/test/mailer.yaml', correct: false}
-            - {value: 'Use `static::getContainer()->get(''mailer'')->stop()`', correct: false}
-            - {value: 'The test client automatically disables mailers.', correct: false}
+            - {value: 'Configure the MAILER_DSN environment variable to "null://"', correct: true, explanation: 'Correct! Setting MAILER_DSN=null:// in .env.test uses the NullTransport which discards all emails without sending them.'}
+            - {value: 'Set `symfony.mailer.disable_delivery: true` in config/packages/test/mailer.yaml', correct: false, explanation: 'Incorrect. This configuration option does not exist in Symfony Mailer. Use MAILER_DSN=null:// instead.'}
+            - {value: 'Use `static::getContainer()->get(''mailer'')->stop()`', correct: false, explanation: 'Incorrect. There is no stop() method on the mailer service. Email prevention is configured via DSN, not runtime calls.'}
+            - {value: 'The test client automatically disables mailers.', correct: false, explanation: 'Incorrect. The test client does not automatically disable email delivery. You must explicitly configure MAILER_DSN=null://.'}
     -
         question: 'After making a request with the test client, how do you instruct it to follow any redirects?'
         answers:

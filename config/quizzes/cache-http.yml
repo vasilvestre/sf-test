@@ -17,17 +17,17 @@ questions:
     -
         question: 'Which HTTP headers are part of the expiration caching model?'
         answers:
-            - {value: 'Expires', correct: true}
-            - {value: 'Cache-Control', correct: true}
-            - {value: 'Last-Modified', correct: false}
-            - {value: 'ETag', correct: false}
+            - {value: 'Expires', correct: true, explanation: 'Expires sets an absolute date/time after which the response is considered stale.'}
+            - {value: 'Cache-Control', correct: true, explanation: 'Cache-Control with max-age directive specifies how long a response can be cached.'}
+            - {value: 'Last-Modified', correct: false, explanation: 'Last-Modified is part of the validation model - it enables conditional requests with If-Modified-Since.'}
+            - {value: 'ETag', correct: false, explanation: 'ETag is part of the validation model - it enables conditional requests with If-None-Match.'}
     -
         question: 'Which HTTP headers are part of the validation caching model?'
         answers:
-            - {value: 'Last-Modified', correct: true}
-            - {value: 'ETag', correct: true}
-            - {value: 'Expires', correct: false}
-            - {value: 'Cache-Control', correct: false}
+            - {value: 'Last-Modified', correct: true, explanation: 'Last-Modified allows clients to make conditional requests using If-Modified-Since header.'}
+            - {value: 'ETag', correct: true, explanation: 'ETag (Entity Tag) allows clients to make conditional requests using If-None-Match header.'}
+            - {value: 'Expires', correct: false, explanation: 'Expires is part of the expiration model - it sets when content becomes stale, not how to validate it.'}
+            - {value: 'Cache-Control', correct: false, explanation: 'Cache-Control is primarily part of the expiration model - it controls cache duration and behavior.'}
     -
         question: 'Which HTTP status code is returned by a server to indicate that the client''s cached copy is still valid?'
         answers:

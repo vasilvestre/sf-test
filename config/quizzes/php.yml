@@ -10,10 +10,10 @@ questions:
     -
         question: 'Which of these operators is non-associative?'
         answers:
-            - {value: "!",   correct: false}
-            - {value: "**",  correct: false}
-            - {value: "<",   correct: true}
-            - {value: "and", correct: false}
+            - {value: "!",   correct: false, explanation: "The ! (logical not) operator is right-associative, not non-associative."}
+            - {value: "**",  correct: false, explanation: "The ** (exponentiation) operator is right-associative."}
+            - {value: "<",   correct: true, explanation: "Comparison operators (<, >, <=, >=, ==, !=) are non-associative in PHP. You cannot chain them like 1 < 2 < 3."}
+            - {value: "and", correct: false, explanation: "The 'and' operator is left-associative."}
     -
         question: 'Since PHP 5.6+, if function foo() is defined in the namespace Myapp\Utils\Bar and your code is in namespace Myapp, what is the correct way to import the foo() function?'
         answers:

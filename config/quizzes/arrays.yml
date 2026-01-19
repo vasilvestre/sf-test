@@ -78,11 +78,11 @@ questions:
     -
         question: 'Which function would you use to add an element to the beginning of an array?'
         answers:
-            - {value: 'array_shift()', correct: false}
-            - {value: 'array_push()', correct: false}
-            - {value: '$array[0] = "value";', correct: false}
-            - {value: 'array_unshift()', correct: true}
-            - {value: 'array_pop()', correct: false}
+            - {value: 'array_shift()', correct: false, explanation: 'Incorrect. array_shift() removes the first element from an array and returns it. It''s the opposite of what you need.'}
+            - {value: 'array_push()', correct: false, explanation: 'Incorrect. array_push() adds elements to the END of an array, not the beginning.'}
+            - {value: '$array[0] = "value";', correct: false, explanation: 'Incorrect. This overwrites the element at index 0, it doesn''t shift existing elements. You''d lose the original first element.'}
+            - {value: 'array_unshift()', correct: true, explanation: 'Correct! array_unshift() adds one or more elements to the beginning of an array, shifting existing elements to higher indices.'}
+            - {value: 'array_pop()', correct: false, explanation: 'Incorrect. array_pop() removes the last element from an array and returns it. It doesn''t add anything.'}
     -
         question: |
                     Which key will not be displayed from the following code block?

@@ -17,10 +17,10 @@ questions:
     -
         question: 'In Psr-3 what delimiter is used for placeholder names ?'
         answers:
-            - {value: '( name )',   correct: false}
-            - {value: '[ name ]',   correct: false}
-            - {value: '{{ name }}', correct: false}
-            - {value: '{ name }',   correct: true}            
+            - {value: '( name )',   correct: false, explanation: 'Incorrect. Parentheses are not used for PSR-3 placeholders. They are typically used for function calls.'}
+            - {value: '[ name ]',   correct: false, explanation: 'Incorrect. Square brackets are not PSR-3 placeholder syntax. They are commonly used for array access.'}
+            - {value: '{{ name }}', correct: false, explanation: 'Incorrect. Double curly braces are Twig template syntax, not PSR-3. PSR-3 uses single curly braces.'}
+            - {value: '{ name }',   correct: true, explanation: 'Correct! PSR-3 uses single curly braces for placeholders. Example: $logger->info("User {username} logged in", [''username'' => $user]).'}            
     -
         question: 'Which Psr is about autoloading ?'
         answers:
@@ -45,11 +45,11 @@ questions:
     -
         question: 'Which Psr is about caching ?'
         answers:
-            - {value: 'Psr-0',   correct: false}
-            - {value: 'Psr-6',   correct: true}
-            - {value: 'Psr-16',  correct: true}
-            - {value: 'Psr-1',   correct: false}               
-            - {value: 'Psr-2',   correct: false}       
+            - {value: 'Psr-0',   correct: false, explanation: 'Incorrect. PSR-0 was the original autoloading standard (now deprecated in favor of PSR-4).'}
+            - {value: 'Psr-6',   correct: true, explanation: 'Correct! PSR-6 defines a caching interface with CacheItemInterface and CacheItemPoolInterface for advanced caching needs.'}
+            - {value: 'Psr-16',  correct: true, explanation: 'Correct! PSR-16 (Simple Cache) defines a simpler caching interface with basic get/set/delete methods for straightforward use cases.'}
+            - {value: 'Psr-1',   correct: false, explanation: 'Incorrect. PSR-1 is the Basic Coding Standard, defining class naming, file encoding, and other code style rules.'}
+            - {value: 'Psr-2',   correct: false, explanation: 'Incorrect. PSR-2 was the Coding Style Guide (now superseded by PSR-12), covering formatting like indentation and braces.'}       
     -
         question: 'Which Psr is deprecated now ?'
         answers:

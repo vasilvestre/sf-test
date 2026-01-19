@@ -48,6 +48,7 @@ class QuizController extends AbstractController
         // Get quiz statistics
         $totalQuizzesTaken = $this->quizResultRepository->getTotalQuizzesTaken();
         $averageSuccessRate = $this->quizResultRepository->getAverageSuccessRate();
+        $totalQuestions = $this->questionRepository->count([]);
 
         // Get chart data
         $chartData = $this->quizResultRepository->getChartData();
@@ -77,6 +78,7 @@ class QuizController extends AbstractController
             'categories' => $categories,
             'totalQuizzesTaken' => $totalQuizzesTaken,
             'averageSuccessRate' => $averageSuccessRate,
+            'totalQuestions' => $totalQuestions,
             'chart' => $chart,
             'categoryStats' => $categoryStats,
             'mostFailedQuestions' => $mostFailedQuestions,
@@ -214,7 +216,8 @@ class QuizController extends AbstractController
                 $questionData['answers'][] = [
                     'id' => $answer->getId(),
                     'text' => $answer->getText(),
-                    'isCorrect' => $answer->isIsCorrect()
+                    'isCorrect' => $answer->isIsCorrect(),
+                    'explanation' => $answer->getExplanation(),
                 ];
             }
 

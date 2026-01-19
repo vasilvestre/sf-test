@@ -13,15 +13,21 @@
 {% block body %}
     <div class="row mb-4">
         <div class="col-12 text-center">
-            <h1 class="display-4">Symfony 7.0 Quiz System</h1>
-            <p class="lead">Test your knowledge of Symfony 7.0 with these quizzes</p>
-            <div class="d-flex justify-content-center gap-2 mt-3">
-                <a href="{{ path('quiz_all') }}" class="btn btn-success">Take Quiz with All Categories</a>
+            <h1 class="display-4 gradient-text-primary animate-scale-in">Symfony 7.0 Quiz System</h1>
+            <p class="lead animate-fade-in-up stagger-1">Test your knowledge of Symfony 7.0 with these quizzes</p>
+            <div class="d-flex justify-content-center gap-2 mt-3 flex-wrap animate-fade-in-up stagger-2">
+                <a href="{{ path('quiz_all') }}" class="btn btn-success hover-lift">
+                    <i class="bi bi-play-fill"></i> Take Quiz with All Categories
+                </a>
                 {% if mostFailedQuestions|length > 0 %}
-                    <a href="{{ path('quiz_failed_questions') }}" class="btn btn-warning">Practice Failed Questions</a>
+                    <a href="{{ path('quiz_failed_questions') }}" class="btn btn-warning hover-lift">
+                        <i class="bi bi-arrow-repeat"></i> Practice Failed Questions
+                    </a>
                 {% endif %}
                 {% if totalQuizzesTaken > 0 %}
-                    <a href="{{ path('quiz_history') }}" class="btn btn-info">View Quiz History</a>
+                    <a href="{{ path('quiz_history') }}" class="btn btn-info hover-lift">
+                        <i class="bi bi-clock-history"></i> View Quiz History
+                    </a>
                 {% endif %}
             </div>
         </div>
@@ -29,27 +35,35 @@
 
     {% if totalQuizzesTaken > 0 %}
         <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="card text-center mb-3">
+            <div class="col-md-4">
+                <div class="card text-center mb-3 index-stat-card animate-fade-in-up stagger-3 hover-lift">
                     <div class="card-body">
-                        <h5 class="card-title">Quizzes Taken</h5>
-                        <p class="card-text display-6">{{ totalQuizzesTaken }}</p>
+                        <h5 class="card-title"><i class="bi bi-question-circle"></i> Total Questions</h5>
+                        <p class="card-text stat-value">{{ totalQuestions }}</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card text-center mb-3">
+            <div class="col-md-4">
+                <div class="card text-center mb-3 index-stat-card animate-fade-in-up stagger-4 hover-lift">
                     <div class="card-body">
-                        <h5 class="card-title">Success Rate</h5>
-                        <p class="card-text display-6">{{ averageSuccessRate|number_format }}%</p>
+                        <h5 class="card-title"><i class="bi bi-check-circle"></i> Quizzes Taken</h5>
+                        <p class="card-text stat-value">{{ totalQuizzesTaken }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center mb-3 index-stat-card animate-fade-in-up stagger-5 hover-lift">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-trophy"></i> Success Rate</h5>
+                        <p class="card-text stat-value">{{ averageSuccessRate|number_format }}%</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="card mb-4" data-controller="chart-toggle">
+        <div class="card mb-4 glass-card animate-fade-in-up stagger-5" data-controller="chart-toggle">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Performance Trend</h5>
+                <h5 class="mb-0"><i class="bi bi-graph-up"></i> Performance Trend</h5>
                 <div>
                     <label for="category-filter" class="form-label me-2">Filter by Category:</label>
                     <select id="category-filter" class="form-select form-select-sm d-inline-block w-auto" data-chart-toggle-target="categorySelect">
@@ -68,19 +82,21 @@
         </div>
 
         {% if mostFailedQuestions|length > 0 %}
-            <div class="card mb-4">
+            <div class="card mb-4 animate-fade-in-up stagger-6">
                 <div class="card-header">
-                    <h5 class="mb-0">Questions You Struggle With ({{ totalFailedQuestions }})</h5>
+                    <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Questions You Struggle With ({{ totalFailedQuestions }})</h5>
                 </div>
                 <div class="card-body">
                     <div class="list-group">
                         {% for questionFailure in mostFailedQuestions %}
-                            <div class="list-group-item">
-                                <div class="d-flex w-100 justify-content-between">
+                            <div class="list-group-item hover-lift">
+                                <div class="d-flex w-100 justify-content-between align-items-start">
                                     <h6 class="mb-1">{{ questionFailure.question.text }}</h6>
-                                    <span class="badge bg-primary">{{ questionFailure.question.category.name }}</span>
+                                    <span class="badge bg-primary ms-2">{{ questionFailure.question.category.name }}</span>
                                 </div>
-                                <small class="text-muted">Failed {{ questionFailure.failureCount }} times</small>
+                                <small class="text-muted">
+                                    <i class="bi bi-x-circle"></i> Failed {{ questionFailure.failureCount }} times
+                                </small>
                             </div>
                         {% endfor %}
                     </div>
@@ -89,19 +105,23 @@
         {% endif %}
 
         {% if mostFailedCategories|length > 0 %}
-            <div class="card mb-4">
+            <div class="card mb-4 animate-fade-in-up stagger-7">
                 <div class="card-header">
-                    <h5 class="mb-0">Categories You Struggle With</h5>
+                    <h5 class="mb-0"><i class="bi bi-graph-down"></i> Categories You Struggle With</h5>
                 </div>
                 <div class="card-body">
                     <div class="list-group">
                         {% for categoryFailure in mostFailedCategories %}
-                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div class="list-group-item d-flex justify-content-between align-items-center hover-lift">
                                 <div>
                                     <h6 class="mb-1">{{ categoryFailure.category.name }}</h6>
-                                    <small class="text-muted">Failed {{ categoryFailure.failureCount }} times</small>
+                                    <small class="text-muted">
+                                        <i class="bi bi-x-circle"></i> Failed {{ categoryFailure.failureCount }} times
+                                    </small>
                                 </div>
-                                <a href="{{ path('quiz_category', {'id': categoryFailure.category.id}) }}" class="btn btn-primary btn-sm">Practice Now</a>
+                                <a href="{{ path('quiz_category', {'id': categoryFailure.category.id}) }}" class="btn btn-primary btn-sm hover-scale">
+                                    <i class="bi bi-play"></i> Practice Now
+                                </a>
                             </div>
                         {% endfor %}
                     </div>
@@ -110,35 +130,55 @@
         {% endif %}
     {% endif %}
 
-    <h2 class="mb-3">Select a Category</h2>
+    <h2 class="mb-3 gradient-text-primary animate-fade-in-up stagger-8">
+        <i class="bi bi-collection"></i> Select a Category
+    </h2>
 
     {% if categories|length > 0 %}
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for category in categories %}
-                <div class="col">
-                    <div class="card h-100">
+                <div class="col animate-fade-in-up stagger-{{ (loop.index % 10) + 8 }}">
+                    <div class="card h-100 hover-lift gradient-border">
                         <div class="card-body">
-                            <h5 class="card-title">{{ category.name }}</h5>
+                            <h5 class="card-title">
+                                <i class="bi bi-folder"></i> {{ category.name }}
+                            </h5>
                             {% if category.description %}
                                 <p class="card-text">{{ category.description }}</p>
                             {% endif %}
-                            <p class="card-text"><small class="text-muted">Questions: {{ category.questions|length }}</small></p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <i class="bi bi-question-circle"></i> Questions: {{ category.questions|length }}
+                                </small>
+                            </p>
 
                             {% if categoryStats[category.id].totalQuizzes > 0 %}
                                 <div class="mb-3">
-                                    <p class="card-text mb-1"><small><strong>Quizzes Taken:</strong> {{ categoryStats[category.id].totalQuizzes }}</small></p>
-                                    <p class="card-text mb-0"><small><strong>Success Rate:</strong> {{ categoryStats[category.id].successRate|number_format }}%</small></p>
+                                    <p class="card-text mb-1">
+                                        <small><strong>Quizzes Taken:</strong> {{ categoryStats[category.id].totalQuizzes }}</small>
+                                    </p>
+                                    <p class="card-text mb-0">
+                                        <small><strong>Success Rate:</strong> 
+                                            <span class="badge bg-{{ categoryStats[category.id].successRate >= 70 ? 'success' : (categoryStats[category.id].successRate >= 50 ? 'warning' : 'danger') }}">
+                                                {{ categoryStats[category.id].successRate|number_format }}%
+                                            </span>
+                                        </small>
+                                    </p>
                                 </div>
                             {% endif %}
                         </div>
                         <div class="card-footer bg-transparent border-top-0 text-end">
-                            <a href="{{ path('quiz_category', {'id': category.id}) }}" class="btn btn-primary">Start Quiz</a>
+                            <a href="{{ path('quiz_category', {'id': category.id}) }}" class="btn btn-primary hover-scale">
+                                <i class="bi bi-play-fill"></i> Start Quiz
+                            </a>
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
     {% else %}
-        <div class="alert alert-info">No quiz categories available. Please check the configuration files.</div>
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> No quiz categories available. Please check the configuration files.
+        </div>
     {% endif %}
 {% endblock %}

@@ -82,10 +82,10 @@ questions:
     -
         question: 'How do you validate that at least one field in a group of fields is not empty?'
         answers:
-            - {value: 'Use the `AtLeastOneOf` constraint at the class level.', correct: true}
-            - {value: 'Use the `SomeNotBlank` constraint.', correct: false}
-            - {value: 'Use a `GroupSequence` with `NotBlank` on each field.', correct: false}
-            - {value: 'This requires a custom callback constraint.', correct: false}
+            - {value: 'Use the `AtLeastOneOf` constraint at the class level.', correct: true, explanation: 'Correct! AtLeastOneOf validates that at least one of the given constraints passes. Apply it at class level to check multiple fields.'}
+            - {value: 'Use the `SomeNotBlank` constraint.', correct: false, explanation: 'Incorrect. SomeNotBlank does not exist in Symfony. There is no built-in constraint with this name.'}
+            - {value: 'Use a `GroupSequence` with `NotBlank` on each field.', correct: false, explanation: 'Incorrect. GroupSequence controls the order of validation groups, but NotBlank on each field would require ALL fields to be filled, not at least one.'}
+            - {value: 'This requires a custom callback constraint.', correct: false, explanation: 'Incorrect. While a Callback constraint could work, it''s not required. AtLeastOneOf is the standard solution for this use case.'}
     -
         question: 'What is the purpose of the `#[Cascade]` attribute on a property holding a related object?'
         answers:
